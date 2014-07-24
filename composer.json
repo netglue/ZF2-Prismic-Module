@@ -1,0 +1,34 @@
+{
+    "name" : "netglue/zf2-prismic-module",
+    "description" : "ZF2 module for the Prismic PHP SDK. Simple wrapper and some added convenience.",
+    "licence" : "MIT",
+    "keywords" : [
+        "prismic.io",
+        "zf2",
+        "netglue"
+    ],
+    "homepage" : "http://netglue.co/",
+    "authors" : [
+        {
+            "name" : "George Steel",
+            "email" : "george@net-glue.co.uk",
+            "homepage" : "http://netglue.co/"
+        }
+    ],
+    "config" : {
+        "bin-dir" : "bin"
+    },
+    "require" : {
+        "php" : ">=5.3.3",
+        "zendframework/zendframework" : "2.3.*",
+        "prismic/php-sdk": "dev-master"
+    },
+    "require-dev" : {
+
+    },
+    "autoload" : {
+        "psr-0" : {
+            "NetgluePrismic" : "src/"
+        }
+    }
+}
