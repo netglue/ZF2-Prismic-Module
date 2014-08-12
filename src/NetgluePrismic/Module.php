@@ -19,11 +19,17 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
  */
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
+/**
+ * Controller Plugin Provider
+ */
+use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
+
 
 class Module implements
              AutoloaderProviderInterface,
              ConfigProviderInterface,
-             ServiceProviderInterface
+             ServiceProviderInterface,
+             ControllerPluginProviderInterface
 {
 
     /**
@@ -61,5 +67,14 @@ class Module implements
 		return include __DIR__ . '/../../config/services.config.php';
 	}
 
+    /**
+     * Return controller plugin config
+     * @return array
+     * @implements ControllerPluginProviderInterface
+     */
+    public function getControllerPluginConfig()
+    {
+        return include __DIR__ . '/../../config/controller-plugins.config.php';
+    }
 
 }
