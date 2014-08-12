@@ -12,8 +12,12 @@ use NetgluePrismic\ApiAwareInterface;
 use NetgluePrismic\Context;
 use NetgluePrismic\ContextAwareInterface;
 use Prismic\Api;
+use Prismic\Document;
 use NetgluePrismic\Exception;
 use NetgluePrismic\Mvc\Router\RouterOptions;
+
+use NetgluePrismic\View\Model\DocumentViewModel;
+use Prismic\LinkResolver;
 
 class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareInterface
 {
@@ -35,6 +39,12 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
      * @var RouterOptions
      */
     protected $routerOptions;
+
+    /**
+     * LinkResolver
+     * @var LinkResolver
+     */
+    protected $linkResolver;
 
     /**
      * Set the Prismic Ref for this instance
@@ -151,6 +161,36 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
         return $params->fromRoute($search);
     }
 
+    public function createViewModel($document = NULL)
+    {
+        $model = new DocumentViewModel;
+        $model->setLinkResolver($this->getLinkResolver());
+        if(!is_null($document)) {
+            if(is_string($document)) {
+                $document = $this->getDocumentById($id);
+            }
+            if(!$document instanceof Document) {
+                throw new Exception\InvalidArgumentException(sprintf(
+                    'Expected a document instance or a valid document id. Received %s',
+                    gettype($document) . ( is_scalar($document) ? $document : '')
+                ));
+            }
+            $model->setDocument($document);
+        }
+        return $model;
+    }
+
+    public function getLinkResolver()
+    {
+        return $this->linkResolver;
+    }
+
+    public function setLinkResolver(LinkResolver $linkResolver)
+    {
+        $this->linkResolver = $linkResolver;
+
+        return $this;
+    }
 
 
 }

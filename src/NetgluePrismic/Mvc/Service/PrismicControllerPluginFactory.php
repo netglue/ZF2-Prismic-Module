@@ -19,11 +19,13 @@ class PrismicControllerPluginFactory implements FactoryInterface
         $serviceLocator = $controllerPluginManager->getServiceLocator();
         $context = $serviceLocator->get('Prismic\Context');
         $routingOptions = $serviceLocator->get('NetgluePrismic\Mvc\Router\RouterOptions');
+        $linkResolver = $serviceLocator->get('NetgluePrismic\Mvc\LinkResolver');
 
         $plugin = new Prismic;
         $plugin->setContext($context);
         $plugin->setPrismicApi($context->getPrismicApi());
         $plugin->setRouterOptions($routingOptions);
+        $plugin->setLinkResolver($linkResolver);
 
         return $plugin;
     }

@@ -21,6 +21,7 @@ return array(
             'mask'     => 'mask',
             'ref'      => 'ref',
             'id'       => 'prismic-id',
+            'slug'     => 'slug',
         ),
 
     ),
