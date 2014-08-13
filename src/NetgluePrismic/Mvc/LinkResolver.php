@@ -43,6 +43,23 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
      */
     protected $prismicContext;
 
+    /**
+     * Cached bookmark routes
+     * @var array
+     */
+    protected $bookmarkRouteNames;
+
+    /**
+     * Cached mask based routes
+     * @var array
+     */
+    protected $maskRouteNames;
+
+    /**
+     * Resolve the given link
+     * @param LinkInterface $link
+     * @return string|NULL
+     */
     public function resolve($link)
     {
         if(!$link instanceof LinkInterface) {
@@ -59,23 +76,49 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
                 $bookmark = $this->getContext()->findBookmarkByDocument($link->getId());
                 $routeName = $this->getRouteNameFromBookmark($bookmark);
 
-                return $this->getRouter()->assemble($this->getUrlParams($link), array(
+                return $this->getRouter()->assemble($this->getRouteParams($link), array(
                     'name' => $routeName,
                 ));
             }
 
-            // Otherwise route based on document type/mask
-            $routeName = $this->getRouteNameFromMask($link->getType());
+            // Can we route based on the mask type
+            if($this->hasRouteForMask($link->getType())) {
+                $routeName = $this->getRouteNameFromMask($link->getType());
 
-            return $this->getRouter()->assemble($this->getUrlParams($link), array(
-                'name' => $routeName,
-            ));
+                return $this->getRouter()->assemble($this->getRouteParams($link), array(
+                    'name' => $routeName,
+                ));
+            }
+
+            /**
+             * Other possible ways to route... ?
+             *
+             * It's not sensible to route by matching slugs as we have absolutely no
+             * way of making any slug unique or ensuring that it exists in the first place.
+             *
+             * Slugs are for presenting pretty urls so providing them when building the url
+             * is the only real purpose for them.
+             *
+             * Routing based on collection is feasible and relatively easy to implement.
+             * Much the same as masks, but, any given document could be in multiple collections which makes it
+             * difficult to discover the route when given a single document.
+             *
+             * Routing based on fragment text value has potential??
+             */
+
+            // Cannot find a specific or generic route for the document
+            return NULL;
         }
 
         return $link->getUrl($this);
     }
 
-    public function getUrlParams(DocumentLink $link)
+    /**
+     * Create Prismic specific Route Paramters from the given Document Link according to routing options
+     * @param DocumentLink $link
+     * @return array
+     */
+    public function getRouteParams(DocumentLink $link)
     {
         $document = $this->getContext()->getDocumentById($link->getId());
         $bookmark = $this->getContext()->findBookmarkByDocument($document);
@@ -108,13 +151,25 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
     }
 
     /**
+     * Return an associative array of bookmark names to route names
+     * @return array
+     */
+    public function getBookmarkedRoutes()
+    {
+        if(!$this->bookmarkRouteNames) {
+            $this->bookmarkRouteNames = $this->findBookmarkedRoutes($this->getRoutes());
+        }
+        return $this->bookmarkRouteNames;
+    }
+
+    /**
      * Search routes for those containing the prismic bookmark parameter in defaults
      *
      * @param array $routes Router config array
      * @param string $parent to help work out the fully qualified route name when called recursively
      * @return array
      */
-    protected function getBookmarkedRoutes(array $routes, $parent = '')
+    protected function findBookmarkedRoutes(array $routes, $parent = '')
     {
         $searchParam = $this->routerOptions->getBookmarkParam();
         $out = array();
@@ -125,7 +180,7 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
                 $out[$bookmark] = $fqrn;
             }
             if(isset($route['child_routes']) && count($route['child_routes'])) {
-                $out = array_merge($out, $this->getBookmarkedRoutes($route['child_routes'], $name));
+                $out = array_merge($out, $this->findBookmarkedRoutes($route['child_routes'], $name));
             }
         }
         return $out;
@@ -138,14 +193,44 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
      */
     public function getRouteNameFromMask($mask)
     {
-        $routes = $this->getRoutesReferencedToMasks($this->getRoutes());
+        $routes = $this->getMaskRoutes($this->getRoutes());
         if(!isset($routes[$mask])) {
             throw new Exception\RuntimeException('No route could be found for the specified document mask');
         }
         return $routes[$mask];
     }
 
-    protected function getRoutesReferencedToMasks(array $routes, $parent = '')
+    /**
+     * Whether there is a route for the given mask/type
+     * @param string $mask
+     * @return bool
+     */
+    public function hasRouteForMask($mask)
+    {
+        $routes = $this->getMaskRoutes($this->getRoutes());
+
+        return isset($routes[$mask]);
+    }
+
+    /**
+     * Return an associative array of mask names to route names
+     * @return array
+     */
+    public function getMaskRoutes()
+    {
+        if(!$this->maskRouteNames) {
+            $this->maskRouteNames = $this->findRoutesReferencedToMasks($this->getRoutes());
+        }
+        return $this->maskRouteNames;
+    }
+
+    /**
+     * Recursively search route config to find those route names that reference a prismic mask/type
+     * @param array $routes
+     * @param string $parent
+     * @return array
+     */
+    protected function findRoutesReferencedToMasks(array $routes, $parent = '')
     {
         $searchParam = $this->routerOptions->getMaskParam();
         $out = array();
@@ -156,7 +241,7 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
                 $out[$maskName] = $fqrn;
             }
             if(isset($route['child_routes']) && count($route['child_routes'])) {
-                $out = array_merge($out, $this->getRoutesReferencedToMasks($route['child_routes'], $name));
+                $out = array_merge($out, $this->findRoutesReferencedToMasks($route['child_routes'], $name));
             }
         }
         return $out;
@@ -207,6 +292,7 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
      */
     public function setRouterOptions(RouterOptions $options)
     {
+        $this->bookmarkRouteNames = $this->maskRouteNames = NULL;
         $this->routerOptions = $options;
     }
 
@@ -220,6 +306,7 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
      */
     public function setRoutes(array $routes)
     {
+        $this->bookmarkRouteNames = $this->maskRouteNames = NULL;
         $this->routes = $routes;
     }
 
