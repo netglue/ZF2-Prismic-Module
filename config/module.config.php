@@ -24,6 +24,24 @@ return array(
             'slug'     => 'slug',
         ),
 
+        /**
+         * Configuration for the Head meta view helper for prismic documents
+         *
+         * The idea is that you would consistently name properties of documents in the masks you
+         * define that correspond to common html head meta values/props. The view helper scans the document
+         * for these named properties and if present, sets the appropriate head property using the other standard
+         * ZF view helpers such as headTitle() headMeta() etc.
+         */
+        'documentHeadViewHelper' => array(
+            'propertyMap' => array(
+                'title' => 'meta_title',
+                'description' => 'meta_description',
+                'ogImage' => 'og_image',
+                'ogTitle' => 'meta_title',
+                'ogDescription' => 'meta_description',
+            ),
+        ),
+
     ),
 
 );

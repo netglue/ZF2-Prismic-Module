@@ -39,6 +39,13 @@ class PrismicDocumentHead extends AbstractHelper
     );
 
 
+    public function setPropertyMap(array $map)
+    {
+        $this->propertyMap = $map;
+
+        return $this;
+    }
+
     public function __invoke(Document $document = NULL)
     {
         if($document) {
