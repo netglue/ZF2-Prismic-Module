@@ -24,12 +24,17 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
  */
 use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
 
+/**
+ * View Helper Provider
+ */
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 
 class Module implements
              AutoloaderProviderInterface,
              ConfigProviderInterface,
              ServiceProviderInterface,
-             ControllerPluginProviderInterface
+             ControllerPluginProviderInterface,
+             ViewHelperProviderInterface
 {
 
     /**
@@ -75,6 +80,16 @@ class Module implements
     public function getControllerPluginConfig()
     {
         return include __DIR__ . '/../../config/controller-plugins.config.php';
+    }
+
+    /**
+     * Return view helper config
+     * @return array
+     * @implements ViewHelperProviderInterface
+     */
+    public function getViewHelperConfig()
+    {
+        return include __DIR__ . '/../../config/view-helpers.config.php';
     }
 
 }
