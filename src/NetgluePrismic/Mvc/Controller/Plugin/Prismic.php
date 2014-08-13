@@ -140,6 +140,27 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
     }
 
     /**
+     * Return the document bookmarked in the route for the current request
+     * @return \Prismic\Document|NULL
+     */
+    public function getBookmarkedDocumentFromRequest()
+    {
+        if(!$this->isBookmarkRequest()) {
+            throw new Exception\RuntimeException('The request does not contain a bookmark parameter');
+        }
+        $bookmark = $this->getBookmarkNameFromRoute();
+        $document = $this->getDocumentByBookmark($bookmark);
+        if(!$document) {
+            throw new Exception\RuntimeException(sprintf(
+                'The bookmark %s does not reference a document',
+                $bookmark
+            ));
+        }
+
+        return $document;
+    }
+
+    /**
      * Return the bookmark referenced in the route matched for the current request
      * @return string|NULL
      */
