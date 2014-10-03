@@ -13,6 +13,7 @@ use NetgluePrismic\Context;
 use NetgluePrismic\ContextAwareInterface;
 use Prismic\Api;
 use Prismic\Document;
+use Prismic\Fragment\Link\DocumentLink;
 use NetgluePrismic\Exception;
 use NetgluePrismic\Mvc\Router\RouterOptions;
 
@@ -139,6 +140,23 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
         return !empty($documentId);
     }
 
+    public function isMaskRequest()
+    {
+        $mask = $this->getMaskFromRoute();
+        return !empty($mask);
+    }
+
+    public function getRouteParamsForDocument(Document $document)
+    {
+        $id = $document->getId();
+        $type = $document->getType();
+        $tags = $document->getTags();
+        $slug = $document->getSlug();
+        $isBroken = false; // ??
+        $link = new DocumentLink($id, $type, $tags, $slug, $isBroken);
+        return $this->getLinkResolver()->getRouteParams($link);
+    }
+
     /**
      * Return the document bookmarked in the route for the current request
      * @return \Prismic\Document|NULL
@@ -160,6 +178,18 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
         return $document;
     }
 
+    public function getDocumentByMaskAndIdFromRequest()
+    {
+        if(!$this->isMaskRequest()) {
+            throw new Exception\RuntimeException('The request does not contain a mask parameter');
+        }
+        $id = $this->getDocumentIdFromRoute();
+        if(empty($id)) {
+            throw new Exception\RuntimeException('The request does not contain the document id');
+        }
+        return $this->getDocumentById($id);
+    }
+
     /**
      * Return the bookmark referenced in the route matched for the current request
      * @return string|NULL
@@ -179,6 +209,17 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
     {
         $params = $this->getController()->plugin('params');
         $search = $this->routerOptions->getMaskParam();
+        return $params->fromRoute($search);
+    }
+
+    /**
+     * Return the document id from the current matched route
+     * @return string|NULL
+     */
+    public function getDocumentIdFromRoute()
+    {
+        $params = $this->getController()->plugin('params');
+        $search = $this->routerOptions->getIdParam();
         return $params->fromRoute($search);
     }
 
