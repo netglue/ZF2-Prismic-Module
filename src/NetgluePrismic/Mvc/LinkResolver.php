@@ -64,21 +64,33 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
     {
         if(!$link instanceof LinkInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Expected an instance of LinkInterface recieved %s',
-                gettype($link) . ( is_scalar($link) ? $link : '' )
+                'Expected an instance of LinkInterface recieved %s %s',
+                gettype($link),
+                (is_scalar($link) ? $link : '')
             ));
         }
 
+
         if($link instanceof DocumentLink) {
+
+            // Is the link broken?
+            if($link->isBroken()) {
+                return NULL;
+            }
 
             // Is the document a bookmark?
             if($this->getContext()->isBookmarked($link->getId())) {
                 $bookmark = $this->getContext()->findBookmarkByDocument($link->getId());
-                $routeName = $this->getRouteNameFromBookmark($bookmark);
 
-                return $this->getRouter()->assemble($this->getRouteParams($link), array(
-                    'name' => $routeName,
-                ));
+                try {
+                    $routeName = $this->getRouteNameFromBookmark($bookmark);
+                    return $this->getRouter()->assemble($this->getRouteParams($link), array(
+                        'name' => $routeName,
+                    ));
+                } catch(Exception\ExceptionInterface $ex) {
+                    // It's perfectly acceptable that there might not be a route setup
+                    // for the found bookmark.
+                }
             }
 
             // Can we route based on the mask type
