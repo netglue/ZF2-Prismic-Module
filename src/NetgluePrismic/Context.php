@@ -7,40 +7,18 @@ use Prismic\Ref;
 use Prismic\Document;
 
 use NetgluePrismic\Exception;
+use NetgluePrismic\ApiAwareTrait;
 
 class Context implements ApiAwareInterface
 {
-    /**
-     * Prismic Api Instance
-     * @var Api|NULL
-     */
-    protected $prismicApi;
+
+    use ApiAwareTrait;
 
     /**
      * Prismic Ref Instance
      * @var Ref|NULL
      */
     protected $ref;
-
-    /**
-     * Set the Prismic Api Instance
-     * @param Api $api
-     * @return void
-     */
-    public function setPrismicApi(Api $api)
-    {
-        $this->prismicApi = $api;
-    }
-
-    /**
-     * Return Prismic Api instance
-     * @return Api|NULL
-     */
-    public function getPrismicApi()
-    {
-        return $this->prismicApi;
-    }
-
 
     /**
      * Set the Prismic Ref

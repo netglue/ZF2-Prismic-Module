@@ -19,7 +19,7 @@
         "bin-dir" : "bin"
     },
     "require" : {
-        "php" : ">=5.3.3",
+        "php" : ">=5.4",
         "zendframework/zendframework" : "2.3.*",
         "prismic/php-sdk": "dev-master"
     },
