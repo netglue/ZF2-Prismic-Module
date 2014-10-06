@@ -54,8 +54,15 @@ class Module implements
     {
         $app = $e->getApplication();
         $services = $app->getServiceManager();
+
+        // Listener to automatically set head meta tags etc.
         $listener = $services->get('NetgluePrismic\Mvc\Listener\HeadMetaListener');
         $app->getEventManager()->attach($listener);
+
+        // Listener that provides the current document to the prismic view helper
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener');
+        $app->getEventManager()->attach($listener);
+
     }
 
     /**

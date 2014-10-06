@@ -17,10 +17,11 @@ class PrismicViewHelperFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $viewPluginManager)
     {
         $serviceLocator = $viewPluginManager->getServiceLocator();
-        $config = $serviceLocator->get('config');
+
+        $linkResolver = $serviceLocator->get('NetgluePrismic\Mvc\LinkResolver');
 
         $helper = new Helper;
-        $helper->setContext($serviceLocator->get('Prismic\Context'));
+        $helper->setLinkResolver($linkResolver);
 
         return $helper;
     }
