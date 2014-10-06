@@ -8,9 +8,14 @@ namespace NetgluePrismic\Mvc\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
+
 use NetgluePrismic\ApiAwareInterface;
-use NetgluePrismic\Context;
+use NetgluePrismic\ApiAwareTrait;
 use NetgluePrismic\ContextAwareInterface;
+use NetgluePrismic\ContextAwareTrait;
+
 use Prismic\Api;
 use Prismic\Document;
 use Prismic\Fragment\Link\DocumentLink;
@@ -20,20 +25,15 @@ use NetgluePrismic\Mvc\Router\RouterOptions;
 use NetgluePrismic\View\Model\DocumentViewModel;
 use Prismic\LinkResolver;
 
-class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareInterface
+class Prismic extends AbstractPlugin implements
+    EventManagerAwareInterface,
+    ApiAwareInterface,
+    ContextAwareInterface
 {
 
-    /**
-     * Prismic Api Instance
-     * @var Api
-     */
-    protected $prismicApi;
-
-    /**
-     * Context Instance
-     * @var Context
-     */
-    protected $prismicContext;
+    use EventManagerAwareTrait;
+    use ApiAwareTrait;
+    use ContextAwareTrait;
 
     /**
      * Router Options
@@ -48,42 +48,10 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
     protected $linkResolver;
 
     /**
-     * Set the Prismic Ref for this instance
-     * @param Context $context
-     * @return void
+     * Current Document
+     * @var Document|null
      */
-    public function setContext(Context $context)
-    {
-        $this->prismicContext = $context;
-    }
-
-    /**
-     * Return Current context
-     * @return Context
-     */
-    public function getContext()
-    {
-        return $this->prismicContext;
-    }
-
-    /**
-     * Set the Prismic Api Instance
-     * @param Api $api
-     * @return void
-     */
-    public function setPrismicApi(Api $api)
-    {
-        $this->prismicApi = $api;
-    }
-
-    /**
-     * Return Prismic Api instance
-     * @return Api
-     */
-    public function getPrismicApi()
-    {
-        return $this->prismicApi;
-    }
+    protected $document;
 
     /**
      * Shorthand for $this->prismic()->getPrismicApi()
@@ -100,9 +68,59 @@ class Prismic extends AbstractPlugin implements ApiAwareInterface, ContextAwareI
     }
 
     /**
+     * Shorthand method to locate the requested doucument from parameters in the request
+     *
+     * Tries to locate the document from it's bookmark, otherwise, by it's id
+     * and return it. Also sets the document as the 'current' document context
+     * and emits an event so that other helpers can pick up on the located document
+     * and do their work
+     *
+     * @return \Prismic\Document|null
+     */
+    public function getDocument()
+    {
+        if(!$this->document) {
+            $document = null;
+            if($this->isBookmarkRequest()) {
+                $document = $this->getBookmarkedDocumentFromRequest();
+            }
+            if($this->isMaskRequest() && !$document) {
+                $document = $this->getDocumentByMaskAndIdFromRequest();
+            }
+            if(!$document && $this->getDocumentIdFromRoute()) {
+                $document = $this->getDocumentById($this->getDocumentIdFromRoute());
+            }
+            if($document) {
+                $this->setDocument($document);
+            }
+        }
+        return $this->document;
+    }
+
+    /**
+     * Sets the current requested document
+     *
+     * This method triggers the primary event we want to listen for but stores a
+     * reference to the requested document so that the event is not triggered more
+     * than once for the same document
+     *
+     * @param  Document $document
+     * @return void
+     */
+    public function setDocument(Document $document)
+    {
+        if($this->document !== $document) {
+            $this->document = $document;
+            $this->getEventManager()->trigger(__FUNCTION__, $this, array(
+                'document' => $this->document,
+            ));
+        }
+    }
+
+    /**
      * Return a single document with the given id at the current repo ref
      * @param string $id
-     * @return \Prismic\Document|NULL
+     * @return \Prismic\Document|null
      */
     public function getDocumentById($id)
     {

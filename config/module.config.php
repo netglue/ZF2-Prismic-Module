@@ -32,7 +32,8 @@ return array(
          * for these named properties and if present, sets the appropriate head property using the other standard
          * ZF view helpers such as headTitle() headMeta() etc.
          */
-        'documentHeadViewHelper' => array(
+        'HeadMetaListener' => array(
+            'enabled' => false,
             'propertyMap' => array(
                 'title' => 'meta_title',
                 'description' => 'meta_description',

@@ -29,13 +29,34 @@ use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
  */
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 
+/**
+ * Bootstrap Listener
+ */
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Zend\EventManager\EventInterface;
+
 class Module implements
              AutoloaderProviderInterface,
              ConfigProviderInterface,
              ServiceProviderInterface,
              ControllerPluginProviderInterface,
-             ViewHelperProviderInterface
+             ViewHelperProviderInterface,
+             BootstrapListenerInterface
 {
+
+    /**
+     * Listen to the bootstrap event
+     *
+     * @param EventInterface $e
+     * @return array
+     */
+    public function onBootstrap(EventInterface $e)
+    {
+        $app = $e->getApplication();
+        $services = $app->getServiceManager();
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\HeadMetaListener');
+        $app->getEventManager()->attach($listener);
+    }
 
     /**
 	 * Return autoloader configuration
