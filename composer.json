@@ -21,7 +21,7 @@
     "require" : {
         "php" : ">=5.4",
         "zendframework/zendframework" : "2.3.*",
-        "prismicio/php-sdk": "dev-label-spans-in-structured-text"
+        "prismic/php-sdk": "dev-label-spans-in-structured-text"
     },
     "require-dev" : {
 
@@ -35,11 +35,6 @@
         {
             "type": "vcs",
             "url": "git@github.com:gsteel/php-kit.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@bitbucket.org:netglue/zf2-prismic-module.git"
         }
-
     ]
 }
