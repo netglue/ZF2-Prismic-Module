@@ -15,10 +15,7 @@ class ContainerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $config = isset($config['prismic']['session']) ? $config['prismic']['session'] : array('name' => 'Prismic');
-
-        $container = new PrismicContainer($config['name']);
+        $container = new PrismicContainer('Prismic');
         $container->setContext($serviceLocator->get('Prismic\Context'));
         return $container;
     }
