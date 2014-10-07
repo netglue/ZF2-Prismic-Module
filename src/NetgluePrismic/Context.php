@@ -105,22 +105,13 @@ class Context implements ApiAwareInterface
          */
         $documentId = $this->getPrismicApi()->bookmark($bookmark);
         if(!$documentId) {
+
             throw new Exception\RuntimeException(sprintf(
-                'The bookmark %s does not exist in this repository',
+                'The bookmark %s does not exist in this repository or has not been linked to a document',
                 (string) $bookmark
             ));
         }
-        $document = $this->getDocumentById($documentId);
-
-        if(!$document) {
-            throw new Exception\RuntimeException(sprintf(
-                'No document could be found with the id %s referenced by the bookmark %s',
-                $documentId,
-                $bookmark
-            ));
-        }
-
-        return $document;
+        return $this->getDocumentById($documentId);
     }
 
     /**

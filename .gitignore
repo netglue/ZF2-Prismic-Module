@@ -1,3 +1,5 @@
 phpunit.xml
 report
 vendor
+bin
+*.lock
