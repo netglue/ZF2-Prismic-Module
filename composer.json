@@ -32,9 +32,5 @@
         }
     },
     "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:gsteel/php-kit.git"
-        }
     ]
 }

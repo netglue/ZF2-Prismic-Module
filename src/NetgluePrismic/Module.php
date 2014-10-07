@@ -64,6 +64,14 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
+        /**
+         * For now, tests die completely due to the view helper manager not being
+         * available in the view manager
+         */
+        if (PHP_SAPI === 'cli') {
+            return;
+        }
+
         $app = $e->getApplication();
         $services = $app->getServiceManager();
 
@@ -88,7 +96,6 @@ class Module implements
             $services->get('NetgluePrismic\Listener\ToolbarListener'),
             'injectToolbar'
         ));
-
     }
 
     /**
