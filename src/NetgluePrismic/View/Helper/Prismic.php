@@ -87,6 +87,21 @@ class Prismic extends AbstractHelper
     }
 
     /**
+     * Whether the document field exists
+     * @param  string $field
+     * @return bool
+     */
+    public function has($field)
+    {
+        $document = $this->getDocument();
+        if ($document) {
+            return $document->has($field);
+        }
+
+        return false;
+    }
+
+    /**
      * Return the fragment that corresponds to the given field name
      *
      * A fully qualified field name is required such as 'my-type.my-field'
@@ -94,9 +109,8 @@ class Prismic extends AbstractHelper
      */
     public function get($field)
     {
-        $document = $this->getDocument();
-        if ($document && $document->has($field)) {
-            return $document->get($field);
+        if ($this->has($field)) {
+            return $this->getDocument()->get($field);
         }
 
         return null;
