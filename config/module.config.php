@@ -45,4 +45,46 @@ return array(
 
     ),
 
+    'router' => array(
+        'routes' => array(
+            'prismic-signin' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/prismic-signin',
+                    'defaults' => array(
+                        'controller' => 'NetgluePrismic\Mvc\Controller\PrismicController',
+                        'action' => 'signin',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'callback' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/callback',
+                            'defaults' => array(
+                                'action' => 'oauth-callback',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            'prismic-ref' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/change-repository-ref',
+                    'defaults' => array(
+                        'controller' => 'NetgluePrismic\Mvc\Controller\PrismicController',
+                        'action' => 'change-ref',
+                    ),
+                ),
+            ),
+        ),
+    ),
+
+    'view_manager' => array(
+        'template_path_stack' => array(
+            'netglue-prismic' => __DIR__ . '/../view',
+        ),
+    ),
 );

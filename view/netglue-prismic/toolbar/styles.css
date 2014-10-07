@@ -1,0 +1,42 @@
+.prismic-toolbar {
+    right: 0;
+    bottom: 0;
+    background: #000;
+    background: rgba(0,0,0,0.6);
+    border-radius: 4px 0 0 0;
+    z-index: 2000;
+    position: fixed;
+    color: #fff;
+    opacity: 0.5;
+    transition: all .3s;
+}
+.prismic-toolbar:hover {
+    opacity: 1;
+    transition: all .3s;
+}
+
+.prismic-toolbar .inner {
+    padding: 5px 15px;
+    margin: 0;
+}
+.prismic-toolbar .inner p {
+    margin: 0;
+    padding: 0;
+}
+.prismic-toolbar button {
+    display: inline-block;
+    margin: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 3px 6px;
+    border-radius: 4px;
+    background: #428bca;
+}
+.prismic-toolbar button:hover {
+    background-color: #2C5E89;
+}

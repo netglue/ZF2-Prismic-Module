@@ -20,6 +20,11 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
 /**
+ * Controller Provider
+ */
+use Zend\ModuleManager\Feature\ControllerProviderInterface;
+
+/**
  * Controller Plugin Provider
  */
 use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
@@ -28,6 +33,12 @@ use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
  * View Helper Provider
  */
 use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+
+/**
+ * Form Element Provider
+ */
+use Zend\ModuleManager\Feature\FormElementProviderInterface;
+
 
 /**
  * Bootstrap Listener
@@ -39,6 +50,7 @@ class Module implements
              AutoloaderProviderInterface,
              ConfigProviderInterface,
              ServiceProviderInterface,
+             ControllerProviderInterface,
              ControllerPluginProviderInterface,
              ViewHelperProviderInterface,
              BootstrapListenerInterface
@@ -55,6 +67,14 @@ class Module implements
         $app = $e->getApplication();
         $services = $app->getServiceManager();
 
+        /**
+         * Make sure that the session is initialised early on as this
+         * is where we decide which ref/release to view.
+         * If the document is located before the session is initialised,
+         * we'll always end up looking at the master ref.
+         */
+        $session = $services->get('NetgluePrismic\Session\PrismicContainer');
+
         // Listener to automatically set head meta tags etc.
         $listener = $services->get('NetgluePrismic\Mvc\Listener\HeadMetaListener');
         $app->getEventManager()->attach($listener);
@@ -62,6 +82,12 @@ class Module implements
         // Listener that provides the current document to the prismic view helper
         $listener = $services->get('NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener');
         $app->getEventManager()->attach($listener);
+
+        // Listener to inject a toolbar into the view
+        $app->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_FINISH, array(
+            $services->get('NetgluePrismic\Listener\ToolbarListener'),
+            'injectToolbar'
+        ));
 
     }
 
@@ -101,6 +127,19 @@ class Module implements
 	}
 
     /**
+     * Return Controller Config
+     * @return array
+     */
+    public function getControllerConfig()
+    {
+        return array(
+            'invokables' => array(
+                'NetgluePrismic\Mvc\Controller\PrismicController' => 'NetgluePrismic\Mvc\Controller\PrismicController',
+            ),
+        );
+    }
+
+    /**
      * Return controller plugin config
      * @return array
      * @implements ControllerPluginProviderInterface
@@ -120,4 +159,27 @@ class Module implements
         return include __DIR__ . '/../../config/view-helpers.config.php';
     }
 
+    public function getFormElementConfig()
+    {
+        return array(
+            'factories' => array(
+                'NetgluePrismic\Form\Element\SelectPrismicRef' => function($manager) {
+                    $element = new \Zend\Form\Element\Select('ref');
+                    $services = $manager->getServiceLocator();
+                    $context = $services->get('Prismic\Context');
+                    $api = $context->getPrismicApi();
+                    foreach($api->refs() as $ref) {
+                        if($ref->isMasterRef()) {
+                            $options[$ref->getRef()] = 'Current Live Website';
+                        } else {
+                            $options[$ref->getRef()] = $ref->getLabel();
+                        }
+                    }
+                    $element->setValueOptions($options);
+                    $element->setValue( (string) $context->getRef());
+                    return $element;
+                }
+            ),
+        );
+    }
 }

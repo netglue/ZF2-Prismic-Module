@@ -52,6 +52,13 @@ class Context implements ApiAwareInterface
         return $this->getPrismicApi()->master();
     }
 
+    public function getRefWithString($refId)
+    {
+        return current(array_filter($this->getPrismicApi()->refs(), function($item) use ($refId) {
+            return $item->getRef() === $refId;
+        }));
+    }
+
     /**
      * Return the string ref for the selected context
      * @return string
