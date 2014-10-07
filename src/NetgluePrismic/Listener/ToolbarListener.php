@@ -1,11 +1,19 @@
 <?php
+/**
+ * Listener that will inject content into the response providing that the
+ * shouldRender flag is true.
+ * The listener is attached to an event manager in module bootstrap
+ */
 
 namespace NetgluePrismic\Listener;
 
-use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\EventInterface;
+
 use Zend\View\Model\ViewModel;
+use Zend\View\Renderer\RendererInterface;
+
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ToolbarListener
 {
@@ -13,7 +21,8 @@ class ToolbarListener
     use ListenerAggregateTrait;
 
     /**
-     * @var object
+     * View Renderer
+     * @var RendererInterface
      */
     protected $renderer;
 
@@ -23,18 +32,55 @@ class ToolbarListener
     protected $serviceLocator;
 
     /**
+     * Whether we should render or not
+     * @var bool
+     */
+    protected $shouldRender = false;
+
+    /**
      * Constructor.
      *
-     * @param object $viewRenderer
+     * @param RendererInterface       $viewRenderer
+     * @param ServiceLocatorInterface $services
      */
-    public function __construct($viewRenderer, $services)
+    public function __construct(RendererInterface $viewRenderer, ServiceLocatorInterface $services)
     {
         $this->renderer = $viewRenderer;
         $this->serviceLocator = $services;
     }
 
-    public function injectToolbar($e)
+    /**
+     * Set the should render flag
+     * @param  bool $flag
+     * @return self
+     */
+    public function setShouldRender($flag = true)
     {
+        $this->shouldRender = (bool) $flag;
+
+        return $this;
+    }
+
+    /**
+     * Whether the toolbar should render or not
+     * @return bool
+     */
+    public function shouldRender()
+    {
+        return $this->shouldRender;
+    }
+
+    /**
+     * Callback that does the work of injecting the toolbar into the response
+     *
+     * @param  EventInterface $event
+     * @return void
+     */
+    public function injectToolbar(EventInterface $event)
+    {
+        if (!$this->shouldRender()) {
+            return;
+        }
         $formManager = $this->serviceLocator->get('FormElementManager');
         $select = $formManager->get('NetgluePrismic\Form\Element\SelectPrismicRef');
 
@@ -52,6 +98,5 @@ class ToolbarListener
         $injected    = preg_replace('/<\/head>/i', $style . "\n</head>", $injected, 1);
         $response->setContent($injected);
     }
-
 
 }
