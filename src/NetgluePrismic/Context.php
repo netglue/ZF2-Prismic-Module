@@ -21,6 +21,12 @@ class Context implements ApiAwareInterface
     protected $ref;
 
     /**
+     * Whether the current request indicates there is privileged access
+     * @var bool
+     */
+    protected $privileged = false;
+
+    /**
      * Set the Prismic Ref
      * @param Ref $ref
      * @return void
@@ -156,6 +162,23 @@ class Context implements ApiAwareInterface
         return NULL;
     }
 
+    /**
+     * Set the privileged access flag
+     * @param bool $flag
+     * @return void
+     */
+    public function setPrivilegedAccess($flag = false)
+    {
+        $this->privileged = (bool) $flag;
+    }
 
+    /**
+     * Whether privileged access is allowed
+     * @return bool
+     */
+    public function getPrivilegedAccess()
+    {
+        return $this->privileged;
+    }
 
 }
