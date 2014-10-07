@@ -84,5 +84,34 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->context->getDocumentByBookmark('Not a bookmark'));
     }
 
+    /**
+     * @expectedException NetgluePrismic\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Expected a document instance or a valid document id
+     */
+    public function testFindBookmarkByDocumentThrowsExceptionForNonDocOrId()
+    {
+        $this->context->findBookmarkByDocument('Not an id');
+    }
+
+    public function testFindBookmarkByDocument()
+    {
+        $notBookmarked = 'VDRjFSsAACoAfWqX';
+        $bookmarked = 'VDRgLysAACoAfWTE';
+        $expect = 'unit-test-bookmark';
+
+        $this->assertEquals($expect, $this->context->findBookmarkByDocument($bookmarked));
+        $this->assertInstanceOf('Prismic\Document', $this->context->getDocumentById($notBookmarked));
+        $this->assertNull($this->context->findBookmarkByDocument($notBookmarked));
+
+        $this->assertTrue($this->context->isBookmarked($bookmarked));
+        $this->assertFalse($this->context->isBookmarked($notBookmarked));
+    }
+
+    public function testGetRefWithStringBasic()
+    {
+        $master = $this->context->getMasterRef();
+
+        $this->assertSame($master, $this->context->getRefWithString( $master->getRef() ));
+    }
 }
 
