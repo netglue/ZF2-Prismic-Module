@@ -50,6 +50,10 @@ class PrismicController extends AbstractActionController
         return $this->redirect()->toUrl($url);
     }
 
+    /**
+     * Given a valid code, post it to the token endpoint with the client secret to exchange it for a temporary access token
+     * @return void
+     */
     public function oauthCallbackAction()
     {
         // We should have 'code' in GET params:
@@ -105,6 +109,10 @@ class PrismicController extends AbstractActionController
         return $this->redirect()->toUrl('/');
     }
 
+    /**
+     * Return the client id as configured
+     * @return string|null
+     */
     protected function getClientId()
     {
         $sl = $this->getServiceLocator();
@@ -116,6 +124,10 @@ class PrismicController extends AbstractActionController
         return null;
     }
 
+    /**
+     * Return the client secret as configured
+     * @return string|null
+     */
     protected function getClientSecret()
     {
         $sl = $this->getServiceLocator();
@@ -127,11 +139,19 @@ class PrismicController extends AbstractActionController
         return null;
     }
 
+    /**
+     * Get a reference to the Prismic context
+     * @return \NetgluePrismic\Context
+     */
     public function getContext()
     {
         return $this->getServiceLocator()->get('Prismic\Context');
     }
 
+    /**
+     * Controller action to allow the user to change the current ref
+     * @return void
+     */
     public function changeRefAction()
     {
         $ref = $this->params()->fromQuery('ref');
@@ -157,10 +177,8 @@ class PrismicController extends AbstractActionController
         $session = new Container('Prismic');
         $session->ref = (string) $ref;
         $this->getContext()->getPrismicApi()->getCache()->clear();
+
         return $this->redirect()->toUrl($redirect);
-
-        var_dump($ref); exit;
-
     }
 
 }
