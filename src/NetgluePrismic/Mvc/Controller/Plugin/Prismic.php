@@ -3,7 +3,6 @@
  * A controller plugin that bundles useful operations for locating prismic documents etc
  */
 
-
 namespace NetgluePrismic\Mvc\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
@@ -79,21 +78,22 @@ class Prismic extends AbstractPlugin implements
      */
     public function getDocument()
     {
-        if(!$this->document) {
+        if (!$this->document) {
             $document = null;
-            if($this->isBookmarkRequest()) {
+            if ($this->isBookmarkRequest()) {
                 $document = $this->getBookmarkedDocumentFromRequest();
             }
-            if($this->isMaskRequest() && !$document) {
+            if ($this->isMaskRequest() && !$document) {
                 $document = $this->getDocumentByMaskAndIdFromRequest();
             }
-            if(!$document && $this->getDocumentIdFromRoute()) {
+            if (!$document && $this->getDocumentIdFromRoute()) {
                 $document = $this->getDocumentById($this->getDocumentIdFromRoute());
             }
-            if($document) {
+            if ($document) {
                 $this->setDocument($document);
             }
         }
+
         return $this->document;
     }
 
@@ -109,7 +109,7 @@ class Prismic extends AbstractPlugin implements
      */
     public function setDocument(Document $document)
     {
-        if($this->document !== $document) {
+        if ($this->document !== $document) {
             $this->document = $document;
             $this->getEventManager()->trigger(__FUNCTION__, $this, array(
                 'document' => $this->document,
@@ -119,7 +119,7 @@ class Prismic extends AbstractPlugin implements
 
     /**
      * Return a single document with the given id at the current repo ref
-     * @param string $id
+     * @param  string                 $id
      * @return \Prismic\Document|null
      */
     public function getDocumentById($id)
@@ -129,7 +129,7 @@ class Prismic extends AbstractPlugin implements
 
     /**
      * Return a single document for the given bookmark name
-     * @param string $bookmark
+     * @param  string            $bookmark
      * @return \Prismic\Document
      * @throws
      */
@@ -155,12 +155,14 @@ class Prismic extends AbstractPlugin implements
     {
         $bookmark = $this->getBookmarkNameFromRoute();
         $documentId = $this->api()->bookmark($bookmark);
+
         return !empty($documentId);
     }
 
     public function isMaskRequest()
     {
         $mask = $this->getMaskFromRoute();
+
         return !empty($mask);
     }
 
@@ -178,6 +180,7 @@ class Prismic extends AbstractPlugin implements
         $slug = $document->getSlug();
         $isBroken = false; // ??
         $link = new DocumentLink($id, $type, $tags, $slug, $isBroken);
+
         return $this->getLinkResolver()->getRouteParams($link);
     }
 
@@ -187,12 +190,12 @@ class Prismic extends AbstractPlugin implements
      */
     public function getBookmarkedDocumentFromRequest()
     {
-        if(!$this->isBookmarkRequest()) {
+        if (!$this->isBookmarkRequest()) {
             throw new Exception\RuntimeException('The request does not contain a bookmark parameter');
         }
         $bookmark = $this->getBookmarkNameFromRoute();
         $document = $this->getDocumentByBookmark($bookmark);
-        if(!$document) {
+        if (!$document) {
             throw new Exception\RuntimeException(sprintf(
                 'The bookmark %s does not reference a document',
                 $bookmark
@@ -204,13 +207,14 @@ class Prismic extends AbstractPlugin implements
 
     public function getDocumentByMaskAndIdFromRequest()
     {
-        if(!$this->isMaskRequest()) {
+        if (!$this->isMaskRequest()) {
             throw new Exception\RuntimeException('The request does not contain a mask parameter');
         }
         $id = $this->getDocumentIdFromRoute();
-        if(empty($id)) {
+        if (empty($id)) {
             throw new Exception\RuntimeException('The request does not contain the document id');
         }
+
         return $this->getDocumentById($id);
     }
 
@@ -222,6 +226,7 @@ class Prismic extends AbstractPlugin implements
     {
         $params = $this->getController()->plugin('params');
         $search = $this->routerOptions->getBookmarkParam();
+
         return $params->fromRoute($search);
     }
 
@@ -233,6 +238,7 @@ class Prismic extends AbstractPlugin implements
     {
         $params = $this->getController()->plugin('params');
         $search = $this->routerOptions->getMaskParam();
+
         return $params->fromRoute($search);
     }
 
@@ -244,6 +250,7 @@ class Prismic extends AbstractPlugin implements
     {
         $params = $this->getController()->plugin('params');
         $search = $this->routerOptions->getIdParam();
+
         return $params->fromRoute($search);
     }
 
@@ -251,11 +258,11 @@ class Prismic extends AbstractPlugin implements
     {
         $model = new DocumentViewModel;
         $model->setLinkResolver($this->getLinkResolver());
-        if(!is_null($document)) {
-            if(is_string($document)) {
+        if (!is_null($document)) {
+            if (is_string($document)) {
                 $document = $this->getDocumentById($id);
             }
-            if(!$document instanceof Document) {
+            if (!$document instanceof Document) {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Expected a document instance or a valid document id. Received %s',
                     gettype($document) . ( is_scalar($document) ? $document : '')
@@ -263,6 +270,7 @@ class Prismic extends AbstractPlugin implements
             }
             $model->setDocument($document);
         }
+
         return $model;
     }
 
@@ -277,6 +285,5 @@ class Prismic extends AbstractPlugin implements
 
         return $this;
     }
-
 
 }
