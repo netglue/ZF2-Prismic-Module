@@ -11,16 +11,23 @@ use Zend\Session\Container;
 class PrismicController extends AbstractActionController
 {
 
+    /**
+     * Throw an exception if we cannot retrieve the client id or secret from config
+     * @param string &$clientId     Populated with client ID if it has been set
+     * @param string &$clientSecret Populated with client Secret if it has been set
+     * @return void
+     * @throws Exception\InvalidCredentialsException
+     */
     private function requireClientIdAndSecret(&$clientId, &$clientSecret)
     {
         $clientId = $this->getClientId();
         if(empty($clientId)) {
-            throw new Exception\InvalidClientIdException('No Client ID has been provided');
+            throw new Exception\InvalidCredentialsException('No Client ID has been provided');
         }
 
         $clientSecret = $this->getClientSecret();
         if(empty($clientSecret)) {
-            throw new Exception\InvalidClientIdException('No Client Secret has been provided');
+            throw new Exception\InvalidCredentialsException('No Client Secret has been provided');
         }
     }
 
