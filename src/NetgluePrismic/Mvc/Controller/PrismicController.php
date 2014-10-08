@@ -8,8 +8,19 @@ use NetgluePrismic\Exception;
 
 use Zend\Session\Container;
 
+use Zend\Http\Client as HttpClient;
+
 class PrismicController extends AbstractActionController
 {
+    /**
+     * @var HttpClient|null
+     */
+    protected $httpClient;
+
+    /**
+     * @var Container|null
+     */
+    protected $session;
 
     /**
      * Throw an exception if we cannot retrieve the client id or secret from config
@@ -91,10 +102,8 @@ class PrismicController extends AbstractActionController
         // Get the token endpoint:
         $endpoint = $this->prismic()->api()->oauthTokenEndpoint();
         // Use Curl for straightforward SSL
-        $client = new \Zend\Http\Client($endpoint, array(
-            'adapter' => 'Zend\Http\Client\Adapter\Curl'
-        ));
-        $client->setMethod('POST');
+        $client = $this->getHttpClient();
+        $client->setUri($endpoint);
         $client->setParameterPost($params);
         $response = $client->send();
 
@@ -110,10 +119,51 @@ class PrismicController extends AbstractActionController
         // Take a minute from the expiry duration incase clocks are off
         $expires -= 60;
 
-        $session = new Container('Prismic');
+        $session = $this->getSessionContainer();
         $session->access_token = $accessToken;
         $session->setExpirationSeconds($expires, 'access_token');
         return $this->redirect()->toUrl('/');
+    }
+
+    /**
+     * Return an existing client or create a new one
+     * @return HttpClient
+     */
+    public function getHttpClient()
+    {
+        if(!$this->httpClient) {
+            $this->httpClient = new HttpClient(null, array(
+                'adapter' => 'Zend\Http\Client\Adapter\Curl'
+            ));
+            $this->httpClient->setMethod('POST');
+        }
+
+        return $this->httpClient;
+    }
+
+    /**
+     * Override HttpClient used for authenticating to the prismic api
+     * @param  HttpClient $client
+     * @return self
+     */
+    public function setHttpClient(HttpClient $client)
+    {
+        $this->httpClient = $client;
+
+        return $this;
+    }
+
+    /**
+     * Return session container for storing the access token
+     * @return Container
+     */
+    public function getSessionContainer()
+    {
+        if(!$this->session) {
+            $services = $this->getServiceLocator();
+            $this->session = $services->get('NetgluePrismic\Session\PrismicContainer');
+        }
+        return $this->session;
     }
 
     /**
@@ -181,8 +231,7 @@ class PrismicController extends AbstractActionController
         }
 
         // Store the ref in the session
-        $session = new Container('Prismic');
-        $session->ref = (string) $ref;
+        $this->getSessionContainer()->ref = (string) $ref;
         $this->getContext()->getPrismicApi()->getCache()->clear();
 
         return $this->redirect()->toUrl($redirect);
