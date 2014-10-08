@@ -38,6 +38,7 @@ class PrismicContainerTest extends \PHPUnit_Framework_TestCase
     public function getContainer()
     {
         $services = bootstrap::getServiceManager();
+
         return $services->get('NetgluePrismic\Session\PrismicContainer');
     }
 
@@ -69,10 +70,10 @@ class PrismicContainerTest extends \PHPUnit_Framework_TestCase
     public function testSetContextSetsContextRefWhenSessionRefIsValid()
     {
         $allRefs = $this->context->getPrismicApi()->refs();
-        $notMaster = array_filter($allRefs, function($value) {
+        $notMaster = array_filter($allRefs, function ($value) {
             return !($value->isMasterRef());
         });
-        if(!count($notMaster)) {
+        if (!count($notMaster)) {
             $this->fail('There are no unpublised releases available in the prismic repository');
         }
         $notMaster = current($notMaster)->getRef();

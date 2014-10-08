@@ -1,7 +1,6 @@
 <?php
 
 namespace NetgluePrismic\Mvc\Controller;
-use NetgluePrismic\bootstrap;
 
 class PrismicControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
@@ -34,7 +33,6 @@ class PrismicControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCo
         $services->setAllowOverride(true);
         $services->setService('config', $config);
     }
-
 
     public function testSigninActionRedirectsWithCredentials()
     {
@@ -78,7 +76,6 @@ class PrismicControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCo
         $manager = $services->get('ControllerManager');
         $controller = $manager->get('NetgluePrismic\Mvc\Controller\PrismicController');
 
-
         $controller->setHttpClient($mockClient);
         $this->assertSame($mockClient, $controller->getHttpClient());
 
@@ -103,10 +100,10 @@ class PrismicControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCo
     public function testChangeRefActionSetsRefInSessionAndContext()
     {
         $allRefs = $this->context->getPrismicApi()->refs();
-        $notMaster = array_filter($allRefs, function($value) {
+        $notMaster = array_filter($allRefs, function ($value) {
             return !($value->isMasterRef());
         });
-        if(!count($notMaster)) {
+        if (!count($notMaster)) {
             $this->fail('There are no unpublised releases available in the prismic repository');
         }
         $notMaster = current($notMaster)->getRef();

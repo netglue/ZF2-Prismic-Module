@@ -21,6 +21,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     public function testGetContext()
     {
         $this->assertInstanceOf('NetgluePrismic\Context', $this->context);
+
         return $this->context;
     }
 
@@ -114,4 +115,3 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($master, $this->context->getRefWithString( $master->getRef() ));
     }
 }
-

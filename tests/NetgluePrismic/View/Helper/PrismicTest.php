@@ -34,12 +34,11 @@ class PrismicTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('NetgluePrismic\Mvc\LinkResolver', $helper->getLinkResolver());
     }
 
-
-
     public function getHelper()
     {
         $services = bootstrap::getServiceManager();
         $manager = $services->get('ViewHelperManager');
+
         return $manager->get('NetgluePrismic\View\Helper\Prismic');
     }
 
@@ -90,7 +89,5 @@ class PrismicTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Don\'t change me unless you want unit tests to fail', $helper->getText('test.test-text'));
         $this->assertStringMatchesFormat('%s', $helper->getHtml('test.test-text'));
     }
-
-
 
 }

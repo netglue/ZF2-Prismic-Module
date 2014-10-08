@@ -164,6 +164,12 @@ class Prismic extends AbstractPlugin implements
         return !empty($mask);
     }
 
+    /**
+     * Return the route parameters for the given document
+     * @param  Document $document
+     * @return array
+     * @see    NetgluePrismic\Mvc\LinkResolver::getRouteParams
+     */
     public function getRouteParamsForDocument(Document $document)
     {
         $id = $document->getId();
