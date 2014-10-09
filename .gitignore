@@ -3,3 +3,4 @@ report
 vendor
 bin
 *.lock
+build
