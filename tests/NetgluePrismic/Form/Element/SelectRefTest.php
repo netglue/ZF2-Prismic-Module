@@ -18,13 +18,12 @@ class SelectRefTest extends \PHPUnit_Framework_TestCase
 
     public function testBasic()
     {
+        $refs = $this->context->getPrismicApi()->refs();
+        $this->assertGreaterThanOrEqual(1, count($refs));
         $select = new SelectRef('test');
-        $select->setRefs($this->context->getPrismicApi()->refs());
+        $select->setRefs($refs);
+        $this->assertGreaterThanOrEqual(1, count($select->getValueOptions()));
 
-        $services = bootstrap::getServiceManager();
-        $manager = $services->get('ViewHelperManager');
-        $plugin = $manager->get('formSelect');
-        echo $plugin($select);
     }
 
 }

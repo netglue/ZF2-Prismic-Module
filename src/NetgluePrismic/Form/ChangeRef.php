@@ -1,9 +1,9 @@
 <?php
-
+namespace NetgluePrismic\Form;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 
-namespace NetgluePrismic\Form\ChangeRef extends Form implements
+class ChangeRef extends Form implements
 	InputFilterProviderInterface
 {
 
@@ -16,14 +16,22 @@ namespace NetgluePrismic\Form\ChangeRef extends Form implements
             'name' => 'ref',
 			'type' => 'NetgluePrismic\Form\Element\SelectRef',
 			'options' => array(
-				'label' => 'Choose a Rejection Message or leave blank to have no message sent',
-				'empty_option' => 'Don\'t send a message',
+				'label' => 'Choose a release',
 			),
 			'attributes' => array(
-				'required' => false,
-				'id' => 'rejectionTemplate',
+				'required' => true,
 			),
         ));
+
+        $this->add(array(
+			'name' => 'change-ref',
+			'type' => 'Zend\Form\Element\Submit',
+			'options' => array(),
+			'attributes' => array(
+				'value' => 'Change',
+			),
+		));
+
     }
 
     /**
@@ -32,7 +40,9 @@ namespace NetgluePrismic\Form\ChangeRef extends Form implements
 	 */
 	public function getInputFilterSpecification()
 	{
+        return array(
 
-	}
+        );
+    }
 
 }

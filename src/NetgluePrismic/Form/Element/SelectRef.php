@@ -9,6 +9,11 @@ use DateTime;
 class SelectRef extends Select
 {
 
+    /**
+     * Set the refs available to select
+     * @param array $refs an Array of Ref objects
+     * @return self
+     */
     public function setRefs(array $refs)
     {
         $future = $options = array();
@@ -28,6 +33,8 @@ class SelectRef extends Select
             );
         }
         $this->setValueOptions($options);
+
+        return $this;
     }
 
     /**
