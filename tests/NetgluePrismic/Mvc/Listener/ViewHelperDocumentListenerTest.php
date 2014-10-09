@@ -1,9 +1,8 @@
 <?php
 namespace NetgluePrismic\Mvc\Listener;
 
-use NetgluePrismic\bootstrap;
 
-class ViewHelperDocumentListenerTest extends \PHPUnit_Framework_TestCase
+class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
 
     private $manager;
@@ -12,9 +11,19 @@ class ViewHelperDocumentListenerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $services = bootstrap::getServiceManager();
+        $this->setApplicationConfig(include __DIR__ . '/../../../TestConfig.php.dist');
+        parent::setUp();
+
+        $services = $this->getApplicationServiceLocator();
         $this->manager = $services->get('ViewHelperManager');
         $this->context = $services->get('Prismic\Context');
+    }
+
+    public function testFactory()
+    {
+        $services = $this->getApplicationServiceLocator();
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener');
+        $this->assertInstanceOf('NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener', $listener);
     }
 
     public function testCanCreateInstance()
@@ -25,15 +34,13 @@ class ViewHelperDocumentListenerTest extends \PHPUnit_Framework_TestCase
         return $listener;
     }
 
-    /**
-     * @depends testCanCreateInstance
-     */
-    public function testDocumentIsSetInHelper(ViewHelperDocumentListener $listener)
-    {
-        $helper = $this->manager->create('NetgluePrismic\View\Helper\Prismic');
-        $this->manager->setAllowOverride(true);
-        $this->manager->setService('Prismic', $helper);
 
+    public function testDocumentIsSetInHelper()
+    {
+        $services = $this->getApplicationServiceLocator();
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener');
+
+        $helper = $this->manager->get('NetgluePrismic\View\Helper\Prismic');
 
         $this->assertInstanceOf('NetgluePrismic\View\Helper\Prismic', $helper);
 
