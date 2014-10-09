@@ -9,6 +9,13 @@ return array(
         //"clientSecret" => 'Some Client Secret',
 
         /**
+         * Webhooks will only work if you first setup the webhook at your repository
+         * with the correct url and add a secret to be sent with the JSON payload
+         * then add that secret here:
+         */
+        //"webhookSecret" => 'SecretPassword',
+
+        /**
          * In order to resolve links to prismic documents within the application,
          * routes need to be setup that provide information about either the bookmark or
          * document type that is to be presented by the view.
@@ -45,8 +52,12 @@ return array(
 
     ),
 
+    /**
+     * These are the ready working routes out of the box
+     */
     'router' => array(
         'routes' => array(
+            // Oauth initiation
             'prismic-signin' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -58,6 +69,7 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
+                    // Callback for exchanging the code with a temporary access token
                     'callback' => array(
                         'type' => 'Segment',
                         'options' => array(
@@ -69,6 +81,7 @@ return array(
                     ),
                 ),
             ),
+            // Change the ref used for content displayed on the site for authenticated users, or open-content plans
             'prismic-ref' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -79,6 +92,7 @@ return array(
                     ),
                 ),
             ),
+            // Recieve notifications from Prismic.io when the content is updated etc.
             'prismic-webhook' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -92,6 +106,7 @@ return array(
         ),
     ),
 
+    // Only used for the toolbar
     'view_manager' => array(
         'template_path_stack' => array(
             'netglue-prismic' => __DIR__ . '/../view',
