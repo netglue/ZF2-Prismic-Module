@@ -15,9 +15,6 @@
             "homepage" : "http://netglue.co/"
         }
     ],
-    "config" : {
-        "bin-dir" : "bin"
-    },
     "require" : {
         "php" : ">=5.4",
         "zendframework/zendframework" : "2.3.*",
