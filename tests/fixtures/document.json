@@ -1,0 +1,40 @@
+{
+    "id": "UjHYesuvzT0A_yi6",
+    "type": "some-type",
+    "href": "http://lesbonneschoses.prismic.io/api/documents/search?ref=UlMgkDLCaosHjz7R&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UjHYesuvzT0A_yi6%22%29+%5D%5D",
+    "tags": [
+        "tag1",
+        "tag2"
+    ],
+    "slugs": [
+        "slug-number-one",
+        "snail-number-two"
+    ],
+    "data": {
+        "some-type": {
+            "meta_title": {
+                "type": "Text",
+                "value": "Head Title Text"
+            },
+            "meta_description": {
+                "type": "Text",
+                "value": "Meta Description"
+            },
+            "og_image": {
+                "type": "Image",
+                "value": {
+                    "main": {
+                        "url": "https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg",
+                        "alt": "alt text",
+                        "copyright": "copyright info",
+                        "dimensions": {
+                            "width": 900,
+                            "height": 600
+                        }
+                    },
+                    "views": {}
+                }
+            }
+        }
+    }
+}

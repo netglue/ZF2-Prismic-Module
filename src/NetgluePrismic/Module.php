@@ -140,8 +140,8 @@ class Module implements
     public function getControllerConfig()
     {
         return array(
-            'invokables' => array(
-                'NetgluePrismic\Mvc\Controller\PrismicController' => 'NetgluePrismic\Mvc\Controller\PrismicController',
+            'factories' => array(
+                'NetgluePrismic\Mvc\Controller\PrismicController' => 'NetgluePrismic\Mvc\Service\PrismicControllerFactory',
             ),
         );
     }

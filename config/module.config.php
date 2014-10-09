@@ -79,6 +79,16 @@ return array(
                     ),
                 ),
             ),
+            'prismic-webhook' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/prismic-webhook',
+                    'defaults' => array(
+                        'controller' => 'NetgluePrismic\Mvc\Controller\PrismicController',
+                        'action' => 'webhook',
+                    ),
+                ),
+            ),
         ),
     ),
 

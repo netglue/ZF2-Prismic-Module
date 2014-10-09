@@ -122,4 +122,31 @@ class PrismicControllerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCo
         $this->assertSame($notMaster, $session->ref);
     }
 
+    public function testWebhookReturnsErrorForNonPostRequest()
+    {
+        $this->dispatch('/prismic-webhook');
+        $this->assertResponseStatusCode(400);
+    }
+
+    public function testWebhookReturnsErrorForInvalidJson()
+    {
+        $this->getRequest()->setContent('Foo');
+        $this->dispatch('/prismic-webhook', 'POST');
+        $this->assertResponseStatusCode(500);
+    }
+
+    public function testWebhookReturnsErrorForInvalidSecret()
+    {
+        $this->getRequest()->setContent('{"secret":"foo"}');
+        $this->dispatch('/prismic-webhook', 'POST');
+        $this->assertResponseStatusCode(401);
+    }
+
+    public function testWebhookReturnsSuccessForValidPayload()
+    {
+        $this->getRequest()->setContent('{"secret":"VerySerious"}');
+        $this->dispatch('/prismic-webhook', 'POST');
+        $this->assertResponseStatusCode(200);
+    }
+
 }

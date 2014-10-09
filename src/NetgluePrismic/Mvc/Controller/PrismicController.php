@@ -23,6 +23,11 @@ class PrismicController extends AbstractActionController
     protected $session;
 
     /**
+     * @var string Webhook Secret
+     */
+    protected $webhookSecret;
+
+    /**
      * Throw an exception if we cannot retrieve the client id or secret from config
      * @param string &$clientId     Populated with client ID if it has been set
      * @param string &$clientSecret Populated with client Secret if it has been set
@@ -235,6 +240,55 @@ class PrismicController extends AbstractActionController
         $this->getContext()->getPrismicApi()->getCache()->clear();
 
         return $this->redirect()->toUrl($redirect);
+    }
+
+    /**
+     * Set the expected webhook secret
+     *
+     * @param  string $secret
+     * @return self
+     */
+    public function setWebhookSecret($secret)
+    {
+        $this->webhookSecret = $secret;
+
+        return $this;
+    }
+
+    /**
+     * Respond to a posted webhook trigger
+     * @return void
+     */
+    public function webhookAction()
+    {
+        if(!$this->getRequest()->isPost()) {
+            return $this->getResponse()
+                ->setStatusCode(400)
+                ->setContent('Expected a POST Request' . PHP_EOL);
+        }
+
+        $json = $this->getRequest()->getContent();
+
+        try {
+            $params = \Zend\Json\Json::decode($json);
+        } catch(\Zend\Json\Exception\ExceptionInterface $e) {
+            return $this->getResponse()
+                ->setStatusCode(500)
+                ->setContent('Invalid JSON Data' . PHP_EOL);
+        }
+
+        // The JSON Payload should include the plain text secret as stdClass->secret
+        if((string) $params->secret !== (string) $this->webhookSecret) {
+            return $this->getResponse()
+                ->setStatusCode(401)
+                ->setContent('Unauthorised' . PHP_EOL);
+        }
+
+        $this->getEventManager()->trigger(__FUNCTION__, $this, (array) $params);
+
+        return $this->getResponse()
+            ->setStatusCode(200)
+            ->setContent(PHP_EOL);
     }
 
 }

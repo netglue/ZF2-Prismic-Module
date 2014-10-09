@@ -98,9 +98,11 @@ class HeadMetaListener implements ListenerAggregateInterface
         $this->document = $event->getParam('document');
         $this->setMetaTitle();
         $this->setMetaDescription();
-        $this->setOgTitle();
-        $this->setOgDescription();
-        $this->setOgImage();
+        if($this->doctype()->isRdfa()) {
+            $this->setOgTitle();
+            $this->setOgDescription();
+            $this->setOgImage();
+        }
     }
 
     /**
@@ -158,11 +160,29 @@ class HeadMetaListener implements ListenerAggregateInterface
 
     /**
      * Return HeadMeta View Helper
+     * @return \Zend\View\Helper\HeadTitle
+     */
+    public function headTitle()
+    {
+        return $this->helperManager->get('headtitle');
+    }
+
+    /**
+     * Return HeadMeta View Helper
      * @return \Zend\View\Helper\HeadMeta
      */
     public function headMeta()
     {
         return $this->helperManager->get('headmeta');
+    }
+
+    /**
+     * Return the doctype view helper
+     * @return Zend\View\Helper\Doctype
+     */
+    public function doctype()
+    {
+        return $this->helperManager->get('doctype');
     }
 
     /**

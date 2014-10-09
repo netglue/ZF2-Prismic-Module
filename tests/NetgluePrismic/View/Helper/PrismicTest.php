@@ -27,10 +27,8 @@ class PrismicTest extends \PHPUnit_Framework_TestCase
     {
         $services = bootstrap::getServiceManager();
         $manager = $services->get('ViewHelperManager');
-        $helper = $manager->get('NetgluePrismic\View\Helper\Prismic');
+        $helper = $manager->create('NetgluePrismic\View\Helper\Prismic');
         $this->assertInstanceOf('NetgluePrismic\View\Helper\Prismic', $helper);
-        $this->assertSame($helper, $manager->get('prismic'));
-
         $this->assertInstanceOf('NetgluePrismic\Mvc\LinkResolver', $helper->getLinkResolver());
     }
 
