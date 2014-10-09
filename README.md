@@ -1,6 +1,6 @@
 # ZF2 Module for quick and easy installation of Prismic PHP SDK
 
-[![alt text](https://travis-ci.org/netglue/zf2-prismic-module.png?branch=master "Travis build")](https://travis-ci.org/netglue/zf2-prismic-module)
+[![Build Status](https://travis-ci.org/netglue/ZF2-Prismic-Module.svg?branch=master)](https://travis-ci.org/netglue/ZF2-Prismic-Module)
 
 
 ## Routing
