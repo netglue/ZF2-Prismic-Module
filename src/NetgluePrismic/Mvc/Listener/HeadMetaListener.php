@@ -75,6 +75,36 @@ class HeadMetaListener implements ListenerAggregateInterface
     }
 
     /**
+     * Get Options
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Set the enabled flag
+     * @param  bool $flag
+     * @return self
+     */
+    public function setEnabled($flag = true)
+    {
+        $this->options['enabled'] = (bool) $flag;
+
+        return $this;
+    }
+
+    /**
+     * Whether the listener action is enabled or not
+     * @return bool
+     */
+    public function enabled()
+    {
+        return isset($this->options['enabled']) ? (bool) $this->options['enabled'] : false;
+    }
+
+    /**
      * Attach to specific events with the shared manager
      * @param  EventManagerInterface $events
      * @return void
@@ -114,7 +144,7 @@ class HeadMetaListener implements ListenerAggregateInterface
      */
     protected function localPropertyToDocumentProperty($property)
     {
-        $docProp = $this->options['propertyMap'][$property];
+        $docProp = isset($this->options['propertyMap'][$property]) ? $this->options['propertyMap'][$property] : $property;
         $type = $this->document->getType();
         return sprintf('%s.%s', $type, $docProp);
     }
@@ -124,15 +154,13 @@ class HeadMetaListener implements ListenerAggregateInterface
      * @param string $property A property name that maps to the expected field value in a document
      * @return string|null
      */
-    protected function getTextValue($property)
+    public function getTextValue($property)
     {
         $docProp = $this->localPropertyToDocumentProperty($property);
         if($this->document->has($docProp)) {
             $fragment = $this->document->get($docProp);
-            if(method_exists($fragment, 'asText')) {
 
-                return $fragment->asText();
-            }
+            return $fragment->asText();
         }
 
         return null;
@@ -143,7 +171,7 @@ class HeadMetaListener implements ListenerAggregateInterface
      * @param string $property A local property name
      * @return string|null
      */
-    protected function getImageUrl($property)
+    public function getImageUrl($property)
     {
         $docProp = $this->localPropertyToDocumentProperty($property);
         if($this->document->has($docProp)) {
