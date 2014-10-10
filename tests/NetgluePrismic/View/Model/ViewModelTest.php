@@ -1,8 +1,6 @@
 <?php
 
 namespace NetgluePrismic\View\Model;
-use NetgluePrismic\bootstrap;
-
 
 class ViewModelTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
@@ -20,6 +18,7 @@ class ViewModelTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpController
     public function getDocument()
     {
         $json = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/document.json'));
+
         return \Prismic\Document::parse($json);
     }
 

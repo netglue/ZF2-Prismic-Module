@@ -2,8 +2,6 @@
 
 namespace NetgluePrismic\Mvc\Listener;
 
-use NetgluePrismic\bootstrap;
-
 class ToolbarListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
 
@@ -18,6 +16,7 @@ class ToolbarListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCont
         $services = $this->getApplicationServiceLocator();
         $toolbar = $services->get('NetgluePrismic\Mvc\Listener\ToolbarListener');
         $this->assertInstanceOf('NetgluePrismic\Mvc\Listener\ToolbarListener', $toolbar);
+
         return $toolbar;
     }
 
@@ -42,6 +41,7 @@ class ToolbarListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCont
     {
         $event = new \Zend\Mvc\MvcEvent;
         $event->setApplication($this->getApplication());
+
         return $event;
     }
 

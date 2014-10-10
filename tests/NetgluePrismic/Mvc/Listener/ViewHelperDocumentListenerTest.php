@@ -1,7 +1,6 @@
 <?php
 namespace NetgluePrismic\Mvc\Listener;
 
-
 class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
 
@@ -45,7 +44,6 @@ class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\Abstr
         $listener->attach($events);
     }
 
-
     public function testDocumentIsSetInHelper()
     {
         $services = $this->getApplicationServiceLocator();
@@ -66,6 +64,5 @@ class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\Abstr
         $this->assertInstanceOf('Prismic\Document', $helper->getDocument());
         $this->assertSame($document, $helper->getDocument());
     }
-
 
 }

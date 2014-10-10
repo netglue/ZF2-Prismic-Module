@@ -1,7 +1,6 @@
 <?php
 
 namespace NetgluePrismic\Mvc;
-use NetgluePrismic\bootstrap;
 use Prismic\Fragment\Link\DocumentLink;
 
 class LinkResolverTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase

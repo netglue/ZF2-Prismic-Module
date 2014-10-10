@@ -2,8 +2,6 @@
 
 namespace NetgluePrismic\Mvc\Listener;
 
-use NetgluePrismic\bootstrap;
-
 class HeadMetaListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
 
@@ -16,12 +14,14 @@ class HeadMetaListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCon
     public function getDocument()
     {
         $json = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/document.json'));
+
         return \Prismic\Document::parse($json);
     }
 
     public function getListener()
     {
         $services = $this->getApplicationServiceLocator();
+
         return $services->get('NetgluePrismic\Mvc\Listener\HeadMetaListener');
     }
 
@@ -101,23 +101,21 @@ class HeadMetaListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCon
 
         $this->assertEmpty($title->renderTitle());
 
-
-
         $listener->onSetDocument($event);
 
         $this->assertEquals('Head Title Text', $title->renderTitle());
 
-        foreach($meta->getContainer()->getArrayCopy() as $item) {
-            if($item->type === 'name') {
+        foreach ($meta->getContainer()->getArrayCopy() as $item) {
+            if ($item->type === 'name') {
                 $this->assertSame('Meta Description', $item->content);
             }
-            if($item->type === 'property') {
-                switch($item->property) {
+            if ($item->type === 'property') {
+                switch ($item->property) {
                     case 'og:title': $expect = 'Head Title Text'; break;
                     case 'og:description': $expect = 'Meta Description'; break;
                     case 'og:image': $expect = 'https://prismicio.s3.amazonaws.com/lesbonneschoses/899162db70c73f11b227932b95ce862c63b9df22.jpg'; break;
                 }
-                if(!isset($expect)) {
+                if (!isset($expect)) {
                     $this->fail('Unexpected poperty name');
                 }
                 $this->assertSame($expect, $item->content);
