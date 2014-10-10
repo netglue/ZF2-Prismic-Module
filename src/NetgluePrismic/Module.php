@@ -93,7 +93,7 @@ class Module implements
 
         // Listener to inject a toolbar into the view
         $app->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_FINISH, array(
-            $services->get('NetgluePrismic\Listener\ToolbarListener'),
+            $services->get('NetgluePrismic\Mvc\Listener\ToolbarListener'),
             'injectToolbar'
         ));
     }

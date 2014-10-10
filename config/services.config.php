@@ -28,8 +28,8 @@ return array(
         'NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener' => 'NetgluePrismic\Mvc\Service\ViewHelperDocumentListenerFactory',
 
         // Listener to inject the toolbar
-        'NetgluePrismic\Listener\ToolbarListener' => function($sm) {
-            return new \NetgluePrismic\Listener\ToolbarListener($sm->get('ViewRenderer'), $sm);
+        'NetgluePrismic\MvcListener\ToolbarListener' => function($sm) {
+            return new \NetgluePrismic\Mvc\Listener\ToolbarListener($sm->get('ViewRenderer'), $sm);
         }
     ),
 
