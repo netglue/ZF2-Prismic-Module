@@ -11,7 +11,7 @@ class PrismicControllerFactory implements FactoryInterface
 
     /**
      * Return Prismic controller
-     * @param ServiceLocatorInterface $controllerPluginManager
+     * @param  ServiceLocatorInterface $controllerPluginManager
      * @return Prismic
      */
     public function createService(ServiceLocatorInterface $controllerManager)
@@ -23,6 +23,7 @@ class PrismicControllerFactory implements FactoryInterface
 
         $controller = new PrismicController;
         $controller->setWebhookSecret($secret);
+
         return $controller;
     }
 

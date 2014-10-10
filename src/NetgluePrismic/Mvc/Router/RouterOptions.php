@@ -20,7 +20,7 @@ class RouterOptions
             'id',
             'slug'
         );
-        foreach($valid as $name) {
+        foreach ($valid as $name) {
             $this->{$name} = isset($options[$name]) ? (string) $options[$name] : $name;
         }
     }

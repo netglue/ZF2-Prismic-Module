@@ -11,7 +11,7 @@ class ContextFactory implements FactoryInterface
 
     /**
      * Return Context to store a global selected repository ref (Or the master)
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ServiceLocatorInterface $serviceLocator
      * @return Context
      * @throws \RuntimeException
      */
@@ -20,6 +20,7 @@ class ContextFactory implements FactoryInterface
         $api = $serviceLocator->get('Prismic\Api');
         $context = new Context;
         $context->setPrismicApi($api);
+
         return $context;
     }
 

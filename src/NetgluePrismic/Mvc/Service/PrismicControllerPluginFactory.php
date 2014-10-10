@@ -11,7 +11,7 @@ class PrismicControllerPluginFactory implements FactoryInterface
 
     /**
      * Return Prismic controller plugin
-     * @param ServiceLocatorInterface $controllerPluginManager
+     * @param  ServiceLocatorInterface $controllerPluginManager
      * @return Prismic
      */
     public function createService(ServiceLocatorInterface $controllerPluginManager)

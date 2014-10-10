@@ -11,7 +11,7 @@ class LinkResolverFactory implements FactoryInterface
 
     /**
      * Return Prismic routing options instance
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ServiceLocatorInterface $serviceLocator
      * @return RouterOptions
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -27,7 +27,6 @@ class LinkResolverFactory implements FactoryInterface
         // Router Options are used to identify Prismic sepcific variables when composing and deconstructing routes
         $routingOptions = $serviceLocator->get('NetgluePrismic\Mvc\Router\RouterOptions');
         $linkResolver->setRouterOptions($routingOptions);
-
 
         /**
          * Routes have to be set rather than querying the router for them because

@@ -11,7 +11,7 @@ class RouterOptionsFactory implements FactoryInterface
 
     /**
      * Return Prismic routing options instance
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ServiceLocatorInterface $serviceLocator
      * @return RouterOptions
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -19,6 +19,7 @@ class RouterOptionsFactory implements FactoryInterface
         $config = $serviceLocator->get('Config');
         $config = isset($config['prismic']['routeParameters']) ? $config['prismic']['routeParameters'] : array();
         $options = new RouterOptions($config);
+
         return $options;
     }
 

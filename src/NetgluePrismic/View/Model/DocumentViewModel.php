@@ -27,7 +27,7 @@ class DocumentViewModel extends ViewModel
      * This method first clears all variables before setting each named fragment of the document to
      * a view variable as HTML using the link resolver in $this->getLinkResolver()
      *
-     * @param Document $document
+     * @param  Document $document
      * @return self
      */
     public function setDocument(Document $document)
@@ -38,7 +38,7 @@ class DocumentViewModel extends ViewModel
 
         $type = $document->getType();
 
-        foreach($document->getFragments() as $name => $fragment) {
+        foreach ($document->getFragments() as $name => $fragment) {
             $var = str_replace($type.'.', '', $name);
             $html = $fragment->asHtml($this->getLinkResolver());
             $this->setVariable($var, $html);
@@ -67,7 +67,7 @@ class DocumentViewModel extends ViewModel
 
     /**
      * Set the link resolver to use for linking between documents
-     * @param LinkResolver $linkResolver
+     * @param  LinkResolver $linkResolver
      * @return self
      */
     public function setLinkResolver(LinkResolver $linkResolver)
@@ -76,7 +76,5 @@ class DocumentViewModel extends ViewModel
 
         return $this;
     }
-
-
 
 }

@@ -29,20 +29,20 @@ class PrismicController extends AbstractActionController
 
     /**
      * Throw an exception if we cannot retrieve the client id or secret from config
-     * @param string &$clientId     Populated with client ID if it has been set
-     * @param string &$clientSecret Populated with client Secret if it has been set
+     * @param  string                                &$clientId     Populated with client ID if it has been set
+     * @param  string                                &$clientSecret Populated with client Secret if it has been set
      * @return void
      * @throws Exception\InvalidCredentialsException
      */
     private function requireClientIdAndSecret(&$clientId, &$clientSecret)
     {
         $clientId = $this->getClientId();
-        if(empty($clientId)) {
+        if (empty($clientId)) {
             throw new Exception\InvalidCredentialsException('No Client ID has been provided');
         }
 
         $clientSecret = $this->getClientSecret();
-        if(empty($clientSecret)) {
+        if (empty($clientSecret)) {
             throw new Exception\InvalidCredentialsException('No Client Secret has been provided');
         }
     }
@@ -70,6 +70,7 @@ class PrismicController extends AbstractActionController
             "scope" => "master+releases"
         ));
         $url = $endpoint . '?' . $params;
+
         return $this->redirect()->toUrl($url);
     }
 
@@ -81,9 +82,10 @@ class PrismicController extends AbstractActionController
     {
         // We should have 'code' in GET params:
         $code = $this->params()->fromQuery('code');
-        if(empty($code)) {
+        if (empty($code)) {
             $this->getResponse()->setReasonPhrase('Bad Request');
             $this->getResponse()->setStatusCode(404);
+
             return;
         }
 
@@ -112,8 +114,9 @@ class PrismicController extends AbstractActionController
         $client->setParameterPost($params);
         $response = $client->send();
 
-        if(!$response->isSuccess()) {
+        if (!$response->isSuccess()) {
             $this->getResponse()->setStatusCode(404);
+
             return;
         }
 
@@ -127,6 +130,7 @@ class PrismicController extends AbstractActionController
         $session = $this->getSessionContainer();
         $session->access_token = $accessToken;
         $session->setExpirationSeconds($expires, 'access_token');
+
         return $this->redirect()->toUrl('/');
     }
 
@@ -136,7 +140,7 @@ class PrismicController extends AbstractActionController
      */
     public function getHttpClient()
     {
-        if(!$this->httpClient) {
+        if (!$this->httpClient) {
             $this->httpClient = new HttpClient(null, array(
                 'adapter' => 'Zend\Http\Client\Adapter\Curl'
             ));
@@ -164,10 +168,11 @@ class PrismicController extends AbstractActionController
      */
     public function getSessionContainer()
     {
-        if(!$this->session) {
+        if (!$this->session) {
             $services = $this->getServiceLocator();
             $this->session = $services->get('NetgluePrismic\Session\PrismicContainer');
         }
+
         return $this->session;
     }
 
@@ -179,7 +184,7 @@ class PrismicController extends AbstractActionController
     {
         $sl = $this->getServiceLocator();
         $config = $sl->get('config');
-        if(isset($config['prismic']['clientId'])) {
+        if (isset($config['prismic']['clientId'])) {
             return $config['prismic']['clientId'];
         }
 
@@ -194,7 +199,7 @@ class PrismicController extends AbstractActionController
     {
         $sl = $this->getServiceLocator();
         $config = $sl->get('config');
-        if(isset($config['prismic']['clientSecret'])) {
+        if (isset($config['prismic']['clientSecret'])) {
             return $config['prismic']['clientSecret'];
         }
 
@@ -218,20 +223,20 @@ class PrismicController extends AbstractActionController
     {
         $ref = $this->params()->fromQuery('ref');
         $url = $this->params()->fromQuery('url');
-        if(!empty($url)) {
+        if (!empty($url)) {
             try {
                 $uri = new \Zend\Uri\Uri($url);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
             }
         }
-        if(!isset($uri) || !isset($ref)) {
+        if (!isset($uri) || !isset($ref)) {
             return $this->getResponse()->setStatusCode(400);
         }
         $redirect = (string) $uri;
 
         // Make sure ref is valid
         $ref = $this->getContext()->getRefWithString($ref);
-        if(!is_object($ref)) {
+        if (!is_object($ref)) {
             return $this->getResponse()->setStatusCode(404);
         }
 
@@ -261,7 +266,7 @@ class PrismicController extends AbstractActionController
      */
     public function webhookAction()
     {
-        if(!$this->getRequest()->isPost()) {
+        if (!$this->getRequest()->isPost()) {
             return $this->getResponse()
                 ->setStatusCode(400)
                 ->setContent('Expected a POST Request' . PHP_EOL);
@@ -271,14 +276,14 @@ class PrismicController extends AbstractActionController
 
         try {
             $params = \Zend\Json\Json::decode($json);
-        } catch(\Zend\Json\Exception\ExceptionInterface $e) {
+        } catch (\Zend\Json\Exception\ExceptionInterface $e) {
             return $this->getResponse()
                 ->setStatusCode(500)
                 ->setContent('Invalid JSON Data' . PHP_EOL);
         }
 
         // The JSON Payload should include the plain text secret as stdClass->secret
-        if((string) $params->secret !== (string) $this->webhookSecret) {
+        if ((string) $params->secret !== (string) $this->webhookSecret) {
             return $this->getResponse()
                 ->setStatusCode(401)
                 ->setContent('Unauthorised' . PHP_EOL);

@@ -6,9 +6,6 @@ use Prismic\Api;
 use Prismic\Ref;
 use Prismic\Document;
 
-use NetgluePrismic\Exception;
-use NetgluePrismic\ApiAwareTrait;
-
 class Context implements ApiAwareInterface
 {
 
@@ -28,7 +25,7 @@ class Context implements ApiAwareInterface
 
     /**
      * Set the Prismic Ref
-     * @param Ref $ref
+     * @param  Ref  $ref
      * @return void
      */
     public function setRef(Ref $ref)
@@ -42,7 +39,7 @@ class Context implements ApiAwareInterface
      */
     public function getRef()
     {
-        if(!$this->ref) {
+        if (!$this->ref) {
             $this->setRef($this->getMasterRef());
         }
 
@@ -60,7 +57,7 @@ class Context implements ApiAwareInterface
 
     public function getRefWithString($refId)
     {
-        return current(array_filter($this->getPrismicApi()->refs(), function($item) use ($refId) {
+        return current(array_filter($this->getPrismicApi()->refs(), function ($item) use ($refId) {
             return $item->getRef() === $refId;
         }));
     }
@@ -76,7 +73,7 @@ class Context implements ApiAwareInterface
 
     /**
      * Return a single document with the given id at the current repo ref
-     * @param string $id
+     * @param  string        $id
      * @return Document|NULL
      */
     public function getDocumentById($id)
@@ -84,7 +81,7 @@ class Context implements ApiAwareInterface
         $query = sprintf('[[:d = at(document.id, "%s")]]', $id);
         $api = $this->getPrismicApi();
         $documents = $api->forms()->everything->query($query)->ref((string) $this->getRef())->submit();
-        if(count($documents->getResults())) {
+        if (count($documents->getResults())) {
             // There should be only one!
             return current($documents->getResults());
         }
@@ -94,7 +91,7 @@ class Context implements ApiAwareInterface
 
     /**
      * Return a single document for the given bookmark name
-     * @param string $bookmark
+     * @param  string                     $bookmark
      * @return Document
      * @throws Exception\RuntimeException
      */
@@ -104,37 +101,39 @@ class Context implements ApiAwareInterface
          * Either a string id or NULL
          */
         $documentId = $this->getPrismicApi()->bookmark($bookmark);
-        if(!$documentId) {
+        if (!$documentId) {
 
             throw new Exception\RuntimeException(sprintf(
                 'The bookmark %s does not exist in this repository or has not been linked to a document',
                 (string) $bookmark
             ));
         }
+
         return $this->getDocumentById($documentId);
     }
 
     /**
      * Whether the given document has been bookmarked
-     * @param Document|string $doc Either a Document instance or the ID of a document
+     * @param  Document|string $doc Either a Document instance or the ID of a document
      * @return bool
      */
     public function isBookmarked($doc)
     {
         $name = $this->findBookmarkByDocument($doc);
+
         return !empty($name);
     }
 
     /**
      * Return the bookmark name for the given document
-     * @param Document|string $doc Either a Document instance or the ID of a document
+     * @param  Document|string                    $doc Either a Document instance or the ID of a document
      * @return string|NULL
      * @throws Exception\InvalidArgumentException
      */
     public function findBookmarkByDocument($doc)
     {
-        if(!$doc instanceof Document) {
-            if(!$d = $this->getDocumentById($doc)) {
+        if (!$doc instanceof Document) {
+            if (!$d = $this->getDocumentById($doc)) {
                 throw new Exception\InvalidArgumentException(sprintf(
                     'Expected a document instance or a valid document id. Received %s %s',
                     gettype($doc),
@@ -144,8 +143,8 @@ class Context implements ApiAwareInterface
             $doc = $d;
         }
         $id = $doc->getId();
-        foreach($this->getPrismicApi()->bookmarks() as $name => $target) {
-            if($id === $target) {
+        foreach ($this->getPrismicApi()->bookmarks() as $name => $target) {
+            if ($id === $target) {
                 return $name;
             }
         }
@@ -155,7 +154,7 @@ class Context implements ApiAwareInterface
 
     /**
      * Set the privileged access flag
-     * @param bool $flag
+     * @param  bool $flag
      * @return void
      */
     public function setPrivilegedAccess($flag = false)

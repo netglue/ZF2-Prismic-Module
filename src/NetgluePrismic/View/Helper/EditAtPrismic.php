@@ -34,7 +34,7 @@ class EditAtPrismic extends AbstractHelper
 
     /**
      * Set the link template markup
-     * @param string $template
+     * @param  string $template
      * @return self
      */
     public function setTemplate($template)
@@ -46,7 +46,7 @@ class EditAtPrismic extends AbstractHelper
 
     /**
      * Set the link text
-     * @param string $text
+     * @param  string $text
      * @return self
      */
     public function setLinkText($text)
@@ -58,7 +58,7 @@ class EditAtPrismic extends AbstractHelper
 
     /**
      * Set the document being linked to
-     * @param Document $document
+     * @param  Document $document
      * @return self
      */
     public function setDocument(Document $document)
@@ -83,7 +83,7 @@ class EditAtPrismic extends AbstractHelper
      */
     public function render()
     {
-        if($this->document) {
+        if ($this->document) {
             // This gets us the document in the api browser:
             $url = $this->document->getHref();
 
@@ -106,11 +106,12 @@ class EditAtPrismic extends AbstractHelper
 
     /**
      * Invoke - within views simply : echo $this->editAtPrismic($document);
-     * @param Document $document
+     * @param  Document $document
      * @return self
      */
-    public function __invoke(Document $document = NULL) {
-        if($document) {
+    public function __invoke(Document $document = NULL)
+    {
+        if ($document) {
             $this->setDocument($document);
         }
 

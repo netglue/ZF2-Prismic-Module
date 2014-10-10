@@ -4,7 +4,7 @@ use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 
 class ChangeRef extends Form implements
-	InputFilterProviderInterface
+    InputFilterProviderInterface
 {
 
     /**
@@ -14,32 +14,32 @@ class ChangeRef extends Form implements
     {
         $this->add(array(
             'name' => 'ref',
-			'type' => 'NetgluePrismic\Form\Element\SelectRef',
-			'options' => array(
-				'label' => 'Choose a release',
-			),
-			'attributes' => array(
-				'required' => true,
-			),
+            'type' => 'NetgluePrismic\Form\Element\SelectRef',
+            'options' => array(
+                'label' => 'Choose a release',
+            ),
+            'attributes' => array(
+                'required' => true,
+            ),
         ));
 
         $this->add(array(
-			'name' => 'change-ref',
-			'type' => 'Zend\Form\Element\Submit',
-			'options' => array(),
-			'attributes' => array(
-				'value' => 'Change',
-			),
-		));
+            'name' => 'change-ref',
+            'type' => 'Zend\Form\Element\Submit',
+            'options' => array(),
+            'attributes' => array(
+                'value' => 'Change',
+            ),
+        ));
 
     }
 
     /**
-	 * Input Filter Spec
-	 * @return array
-	 */
-	public function getInputFilterSpecification()
-	{
+     * Input Filter Spec
+     * @return array
+     */
+    public function getInputFilterSpecification()
+    {
         return array(
 
         );

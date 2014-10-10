@@ -11,7 +11,7 @@ class HeadMetaListenerFactory implements FactoryInterface
 
     /**
      * Return configured HeadMetaListener
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ServiceLocatorInterface $serviceLocator
      * @return HeadMetaListener
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -20,9 +20,10 @@ class HeadMetaListenerFactory implements FactoryInterface
         $helperManager = $viewManager->getHelperManager();
         $listener = new HeadMetaListener($helperManager);
         $config = $serviceLocator->get('config');
-        if(isset($config['prismic']['HeadMetaListener'])) {
+        if (isset($config['prismic']['HeadMetaListener'])) {
             $listener->setOptions($config['prismic']['HeadMetaListener']);
         }
+
         return $listener;
     }
 

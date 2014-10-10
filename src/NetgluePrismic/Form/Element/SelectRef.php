@@ -11,22 +11,22 @@ class SelectRef extends Select
 
     /**
      * Set the refs available to select
-     * @param array $refs an Array of Ref objects
+     * @param  array $refs an Array of Ref objects
      * @return self
      */
     public function setRefs(array $refs)
     {
         $future = $options = array();
 
-        foreach($refs as $ref) {
+        foreach ($refs as $ref) {
             $value = $ref->getRef();
-            if($ref->isMasterRef()) {
+            if ($ref->isMasterRef()) {
                 $options[$value] = $this->createLabel($ref);
             } else {
                 $future[$value] = $this->createLabel($ref);
             }
         }
-        if(count($future)) {
+        if (count($future)) {
             $options[] = array(
                 'label' => 'Future Releases',
                 'options' => $future
@@ -39,19 +39,20 @@ class SelectRef extends Select
 
     /**
      * Return a label for the given ref
-     * @param  Ref $ref
+     * @param  Ref    $ref
      * @return string
      */
     public function createLabel(Ref $ref)
     {
         $timestamp = $ref->getScheduledAt();
-        if(null !== $timestamp) {
+        if (null !== $timestamp) {
 
             $date = new DateTime;
             $date->setTimestamp($timestamp);
             $timestamp = sprintf("(Scheduled for release on %s)",
                 $date->format('jS F Y'));
         }
+
         return trim(sprintf("%s %s",
             $ref->getLabel(),
             $timestamp));

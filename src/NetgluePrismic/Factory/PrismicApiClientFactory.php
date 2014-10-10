@@ -13,14 +13,14 @@ class PrismicApiClientFactory implements FactoryInterface
 
     /**
      * Return Prismic Api Client
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ServiceLocatorInterface $serviceLocator
      * @return Api
      * @throws \RuntimeException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
-        if(!isset($config['prismic']['api'])) {
+        if (!isset($config['prismic']['api'])) {
             throw new \RuntimeException('No configuration has been provided in order to retrieve a Prismic API Client');
         }
         $config = $config['prismic'];
@@ -32,7 +32,7 @@ class PrismicApiClientFactory implements FactoryInterface
          * Check the Session for a token and prefer that if it exists.
          */
         $session = new Container('Prismic');
-        if(isset($session->access_token)) {
+        if (isset($session->access_token)) {
             $token = $session->access_token;
         }
 
@@ -46,9 +46,10 @@ class PrismicApiClientFactory implements FactoryInterface
          */
         try {
             $api = Api::get($url, $token);
-        } catch(HttpException $e) {
+        } catch (HttpException $e) {
             $api = Api::get($url, $configToken);
         }
+
         return $api;
     }
 
