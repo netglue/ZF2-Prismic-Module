@@ -34,6 +34,17 @@ class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\Abstr
         return $listener;
     }
 
+    /**
+     * Any point doing this?
+     */
+    public function testCoverAttach()
+    {
+        $services = $this->getApplicationServiceLocator();
+        $events = $services->get('EventManager');
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener');
+        $listener->attach($events);
+    }
+
 
     public function testDocumentIsSetInHelper()
     {
