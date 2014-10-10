@@ -15,7 +15,7 @@ trait ApiAwareTrait
 
     /**
      * Set the Prismic Api Instance
-     * @param Api $api
+     * @param  Api  $api
      * @return void
      */
     public function setPrismicApi(Api $api)

@@ -21,6 +21,7 @@ class PrismicTest extends \PHPUnit_Framework_TestCase
     public function testGetPlugin()
     {
         $this->assertInstanceOf('NetgluePrismic\Mvc\Controller\Plugin\Prismic', $this->plugin);
+
         return $this->plugin;
     }
 
@@ -34,6 +35,7 @@ class PrismicTest extends \PHPUnit_Framework_TestCase
         $controller = $manager->get('NetgluePrismic\Mvc\Controller\PrismicController');
         $plugin->setController($controller);
         $this->assertSame($controller, $plugin->getController());
+
         return $plugin;
     }
 

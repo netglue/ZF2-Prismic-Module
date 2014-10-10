@@ -11,20 +11,19 @@ class PrismicContainer extends Container implements ContextAwareInterface
 {
     use ContextAwareTrait;
 
-
     /**
      * Set the Prismic Ref for this instance
-     * @param Context $context
+     * @param  Context $context
      * @return void
      */
     public function setContext(Context $context)
     {
         $this->prismicContext = $context;
-        if(!isset($this->ref)) {
+        if (!isset($this->ref)) {
             $this->ref = (string) $context->getRef();
         } else {
             $refObject = $context->getRefWithString($this->ref);
-            if(is_object($refObject)) {
+            if (is_object($refObject)) {
                 $context->setRef($refObject);
             }
         }
@@ -39,7 +38,7 @@ class PrismicContainer extends Container implements ContextAwareInterface
             $context->getPrismicApi()->refs()
         );
 
-        if(!in_array($this->ref, $allRefs, true)) {
+        if (!in_array($this->ref, $allRefs, true)) {
             $this->ref = (string) $context->getMasterRef();
             $context->setRef($context->getMasterRef());
         }

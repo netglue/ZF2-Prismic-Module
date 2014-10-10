@@ -75,6 +75,36 @@ class HeadMetaListener implements ListenerAggregateInterface
     }
 
     /**
+     * Get Options
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * Set the enabled flag
+     * @param  bool $flag
+     * @return self
+     */
+    public function setEnabled($flag = true)
+    {
+        $this->options['enabled'] = (bool) $flag;
+
+        return $this;
+    }
+
+    /**
+     * Whether the listener action is enabled or not
+     * @return bool
+     */
+    public function enabled()
+    {
+        return isset($this->options['enabled']) ? (bool) $this->options['enabled'] : false;
+    }
+
+    /**
      * Attach to specific events with the shared manager
      * @param  EventManagerInterface $events
      * @return void
@@ -92,13 +122,13 @@ class HeadMetaListener implements ListenerAggregateInterface
      */
     public function onSetDocument(EventInterface $event)
     {
-        if(!$this->options['enabled']) {
+        if (!$this->options['enabled']) {
             return;
         }
         $this->document = $event->getParam('document');
         $this->setMetaTitle();
         $this->setMetaDescription();
-        if($this->doctype()->isRdfa()) {
+        if ($this->doctype()->isRdfa()) {
             $this->setOgTitle();
             $this->setOgDescription();
             $this->setOgImage();
@@ -114,25 +144,24 @@ class HeadMetaListener implements ListenerAggregateInterface
      */
     protected function localPropertyToDocumentProperty($property)
     {
-        $docProp = $this->options['propertyMap'][$property];
+        $docProp = isset($this->options['propertyMap'][$property]) ? $this->options['propertyMap'][$property] : $property;
         $type = $this->document->getType();
+
         return sprintf('%s.%s', $type, $docProp);
     }
 
     /**
      * Return the text value of the given document property
-     * @param string $property A property name that maps to the expected field value in a document
+     * @param  string      $property A property name that maps to the expected field value in a document
      * @return string|null
      */
-    protected function getTextValue($property)
+    public function getTextValue($property)
     {
         $docProp = $this->localPropertyToDocumentProperty($property);
-        if($this->document->has($docProp)) {
+        if ($this->document->has($docProp)) {
             $fragment = $this->document->get($docProp);
-            if(method_exists($fragment, 'asText')) {
 
-                return $fragment->asText();
-            }
+            return $fragment->asText();
         }
 
         return null;
@@ -140,15 +169,15 @@ class HeadMetaListener implements ListenerAggregateInterface
 
     /**
      * Assuming the given property is for an image, return the URL for the 'main' image in that fragment
-     * @param string $property A local property name
+     * @param  string      $property A local property name
      * @return string|null
      */
-    protected function getImageUrl($property)
+    public function getImageUrl($property)
     {
         $docProp = $this->localPropertyToDocumentProperty($property);
-        if($this->document->has($docProp)) {
+        if ($this->document->has($docProp)) {
             $fragment = $this->document->get($docProp);
-            if($fragment instanceof ImageFragment) {
+            if ($fragment instanceof ImageFragment) {
 
                 // Get the url of 'main'
                 return $fragment->getMain()->getUrl();
@@ -192,7 +221,7 @@ class HeadMetaListener implements ListenerAggregateInterface
     protected function setMetaTitle()
     {
         $value = $this->getTextValue('title');
-        if(!empty($value)) {
+        if (!empty($value)) {
             $this->helperManager->get('headtitle')->set($value);
         }
 
@@ -206,7 +235,7 @@ class HeadMetaListener implements ListenerAggregateInterface
     protected function setMetaDescription()
     {
         $value = $this->getTextValue('description');
-        if(!empty($value)) {
+        if (!empty($value)) {
             $this->headMeta()->setName('description', $value);
         }
 
@@ -220,7 +249,7 @@ class HeadMetaListener implements ListenerAggregateInterface
     protected function setOgTitle()
     {
         $value = $this->getTextValue('ogTitle');
-        if(!empty($value)) {
+        if (!empty($value)) {
             $this->headMeta()->setProperty('og:title', $value);
         }
 
@@ -234,7 +263,7 @@ class HeadMetaListener implements ListenerAggregateInterface
     protected function setOgDescription()
     {
         $value = $this->getTextValue('ogDescription');
-        if(!empty($value)) {
+        if (!empty($value)) {
             $this->headMeta()->setProperty('og:description', $value);
         }
 
@@ -244,13 +273,11 @@ class HeadMetaListener implements ListenerAggregateInterface
     protected function setOgImage()
     {
         $value = $this->getImageUrl('ogImage');
-        if(!empty($value)) {
+        if (!empty($value)) {
             $this->headMeta()->setProperty('og:image', $value);
         }
 
         return $this;
     }
-
-
 
 }

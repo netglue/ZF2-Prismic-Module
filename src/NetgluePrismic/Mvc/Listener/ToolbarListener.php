@@ -5,7 +5,7 @@
  * The listener is attached to an event manager in module bootstrap
  */
 
-namespace NetgluePrismic\Listener;
+namespace NetgluePrismic\Mvc\Listener;
 
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\EventManager\EventInterface;
@@ -84,7 +84,7 @@ class ToolbarListener
         $formManager = $this->serviceLocator->get('FormElementManager');
         $select = $formManager->get('NetgluePrismic\Form\Element\SelectPrismicRef');
 
-        $response    = $e->getApplication()->getResponse();
+        $response    = $event->getApplication()->getResponse();
         $toolbarView = new ViewModel;
         $toolbarView->selectRef = $select;
         $toolbarView->setTemplate('netglue-prismic/toolbar/toolbar');

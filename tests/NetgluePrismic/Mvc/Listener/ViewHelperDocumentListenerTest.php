@@ -1,7 +1,6 @@
 <?php
 namespace NetgluePrismic\Mvc\Listener;
 
-
 class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
 
@@ -34,6 +33,16 @@ class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\Abstr
         return $listener;
     }
 
+    /**
+     * Any point doing this?
+     */
+    public function testCoverAttach()
+    {
+        $services = $this->getApplicationServiceLocator();
+        $events = $services->get('EventManager');
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener');
+        $listener->attach($events);
+    }
 
     public function testDocumentIsSetInHelper()
     {
@@ -55,6 +64,5 @@ class ViewHelperDocumentListenerTest extends \Zend\Test\PHPUnit\Controller\Abstr
         $this->assertInstanceOf('Prismic\Document', $helper->getDocument());
         $this->assertSame($document, $helper->getDocument());
     }
-
 
 }
