@@ -83,6 +83,10 @@ class Module implements
          */
         $session = $services->get('NetgluePrismic\Session\PrismicContainer');
 
+        // Cache Buster that's triggered when we receive a valid webhook payload from the Prismic API
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\CacheBusterListener');
+        $app->getEventManager()->attach($listener);
+
         // Listener to automatically set head meta tags etc.
         $listener = $services->get('NetgluePrismic\Mvc\Listener\HeadMetaListener');
         $app->getEventManager()->attach($listener);

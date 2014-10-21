@@ -33,6 +33,10 @@ return array(
         }
     ),
 
+    'invokables' => array(
+        'NetgluePrismic\Mvc\Listener\CacheBusterListener' => 'NetgluePrismic\Mvc\Listener\CacheBusterListener',
+    ),
+
     'aliases' => array(
         'PrismicApiClient' => 'Prismic\Api',
         'PrismicRouterOptions' => 'NetgluePrismic\Mvc\Router\RouterOptions',
