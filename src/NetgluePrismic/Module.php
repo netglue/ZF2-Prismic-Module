@@ -45,6 +45,9 @@ use Zend\ModuleManager\Feature\FormElementProviderInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\EventManager\EventInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class Module implements
              AutoloaderProviderInterface,
              ConfigProviderInterface,
@@ -134,7 +137,39 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/../../config/services.config.php';
+        return array(
+            'factories' => array(
+                // Prismic SDK Api \Prismic\Api
+                'Prismic\Api' => 'NetgluePrismic\Factory\PrismicApiClientFactory',
+                // Site-wide context \NetgluePrismic\Context
+                'Prismic\Context' => 'NetgluePrismic\Factory\ContextFactory',
+                // Options for the router/link resolver
+                'NetgluePrismic\Mvc\Router\RouterOptions' => 'NetgluePrismic\Mvc\Service\RouterOptionsFactory',
+                // Link Resolver
+                'NetgluePrismic\Mvc\LinkResolver' => 'NetgluePrismic\Mvc\Service\LinkResolverFactory',
+                // Session for storing access tokens and selected ref/release
+                'NetgluePrismic\Session\PrismicContainer' => 'NetgluePrismic\Session\ContainerFactory',
+
+                /**
+                 * Listeners
+                 */
+                // Automatically set meta title etc when successfully routed to a single document
+                'NetgluePrismic\Mvc\Listener\HeadMetaListener' => 'NetgluePrismic\Mvc\Service\HeadMetaListenerFactory',
+                // Injects the routed document into the view helper
+                'NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener' => 'NetgluePrismic\Mvc\Service\ViewHelperDocumentListenerFactory',
+                // Listener to inject the toolbar
+                'NetgluePrismic\MvcListener\ToolbarListener' => function($sm) {
+                    return new \NetgluePrismic\Mvc\Listener\ToolbarListener($sm->get('ViewRenderer'), $sm);
+                }
+            ),
+            'invokables' => array(
+                'NetgluePrismic\Mvc\Listener\CacheBusterListener' => 'NetgluePrismic\Mvc\Listener\CacheBusterListener',
+            ),
+            'aliases' => array(
+                'PrismicApiClient' => 'Prismic\Api',
+                'PrismicRouterOptions' => 'NetgluePrismic\Mvc\Router\RouterOptions',
+            ),
+        );
     }
 
     /**
@@ -157,7 +192,14 @@ class Module implements
      */
     public function getControllerPluginConfig()
     {
-        return include __DIR__ . '/../../config/controller-plugins.config.php';
+        return array(
+            'factories' => array(
+                'NetgluePrismic\Mvc\Controller\Plugin\Prismic' => 'NetgluePrismic\Mvc\Service\PrismicControllerPluginFactory',
+            ),
+            'aliases' => array(
+                'Prismic' => 'NetgluePrismic\Mvc\Controller\Plugin\Prismic',
+            ),
+        );
     }
 
     /**
@@ -167,9 +209,25 @@ class Module implements
      */
     public function getViewHelperConfig()
     {
-        return include __DIR__ . '/../../config/view-helpers.config.php';
+        return array(
+            'invokables' => array(
+                'NetgluePrismic\View\Helper\EditAtPrismic' => 'NetgluePrismic\View\Helper\EditAtPrismic',
+            ),
+            'factories' => array(
+                'NetgluePrismic\View\Helper\Prismic' => 'NetgluePrismic\View\Service\PrismicViewHelperFactory',
+            ),
+            'aliases' => array(
+                'prismic' => 'NetgluePrismic\View\Helper\Prismic',
+                'editAtPrismic' => 'NetgluePrismic\View\Helper\EditAtPrismic',
+            ),
+        );
     }
 
+    /**
+     * Return form element config
+     * @return array
+     * @implements FormElementProviderInterface
+     */
     public function getFormElementConfig()
     {
         return array(
