@@ -2,6 +2,7 @@
 
 namespace NetgluePrismic\Mvc;
 use Prismic\Fragment\Link\DocumentLink;
+use Prismic\Fragment\Link\WebLink;
 
 class LinkResolverTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
@@ -77,6 +78,35 @@ class LinkResolverTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControl
 
         $url = $this->resolver->resolve($link);
         $this->assertEquals($expect, $url);
+    }
 
+    /**
+     * @expectedException NetgluePrismic\Exception\InvalidArgumentException
+     * @expectedExceptionMessage Expected an instance of LinkInterface
+     */
+    public function testResolveThrowsExceptionForInvalidArgument()
+    {
+        $this->resolver->resolve('foo');
+    }
+
+    public function testResolveReturnsUrlForNonDocumentLinks()
+    {
+        $link = new WebLink('http://www.google.com');
+        $result = $this->resolver->resolve($link);
+        $this->assertEquals('http://www.google.com', $result);
+    }
+
+    public function testResolveReturnsNullForBrokenDocumentLinks()
+    {
+        $link = new DocumentLink('abcd', 'some-type', array('tag1'), 'snails', true);
+        $result = $this->resolver->resolve($link);
+        $this->assertNull($result);
+    }
+
+    public function testResolveReturnsNullForUnroutableDocumentLinks()
+    {
+        $link = new DocumentLink('abcd', 'some-type', array('tag1'), 'snails', false);
+        $result = $this->resolver->resolve($link);
+        $this->assertNull($result);
     }
 }
