@@ -5,6 +5,7 @@ namespace NetgluePrismic\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 
 use Prismic\Fragment\Link\LinkInterface;
+use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Document;
 use NetgluePrismic\Exception;
 use NetgluePrismic\Mvc\LinkResolver;
@@ -63,7 +64,7 @@ class Url extends AbstractHelper
         }
 
         if($target instanceof Document) {
-            $link = $target->getLinkInstance();
+            $link = $this->getLink($target);
         }
 
         if(! $link instanceof LinkInterface) {
@@ -104,8 +105,24 @@ class Url extends AbstractHelper
         if(!$this->target instanceof LinkInterface) {
             return '';
         }
+
         return $this->getLinkResolver()->resolve($this->target);
     }
 
+    /**
+     * This is likely to go away as we should probably be making links in the document, or via the link resolver perhaps
+     * @param Document $doc
+     * @return DocumentLink
+     */
+    private function getLink(Document $doc)
+    {
+        return new DocumentLink(
+            $doc->getId(),
+            $doc->getType(),
+            $doc->getTags(),
+            $doc->getSlug(),
+            false
+        );
+    }
 
 }
