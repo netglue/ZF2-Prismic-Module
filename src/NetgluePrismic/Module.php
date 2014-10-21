@@ -215,9 +215,11 @@ class Module implements
             ),
             'factories' => array(
                 'NetgluePrismic\View\Helper\Prismic' => 'NetgluePrismic\View\Service\PrismicViewHelperFactory',
+                'NetgluePrismic\View\Helper\Url'     => 'NetgluePrismic\View\Service\UrlViewHelperFactory',
             ),
             'aliases' => array(
-                'prismic' => 'NetgluePrismic\View\Helper\Prismic',
+                'prismic'       => 'NetgluePrismic\View\Helper\Prismic',
+                'prismicUrl'    => 'NetgluePrismic\View\Helper\Url',
                 'editAtPrismic' => 'NetgluePrismic\View\Helper\EditAtPrismic',
             ),
         );

@@ -4,15 +4,15 @@ namespace NetgluePrismic\View\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use NetgluePrismic\View\Helper\Prismic as Helper;
+use NetgluePrismic\View\Helper\Url;
 
-class PrismicViewHelperFactory implements FactoryInterface
+class UrlViewHelperFactory implements FactoryInterface
 {
 
     /**
-     * Return Prismic (Document) view helper
+     * Return Prismic Url Helper
      * @param  ServiceLocatorInterface $controllerPluginManager
-     * @return Helper
+     * @return Url
      */
     public function createService(ServiceLocatorInterface $viewPluginManager)
     {
@@ -20,8 +20,7 @@ class PrismicViewHelperFactory implements FactoryInterface
 
         $linkResolver = $serviceLocator->get('NetgluePrismic\Mvc\LinkResolver');
 
-        $helper = new Helper;
-        $helper->setLinkResolver($linkResolver);
+        $helper = new Url($linkResolver);
 
         return $helper;
     }
