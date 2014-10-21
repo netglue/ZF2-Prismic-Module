@@ -55,6 +55,11 @@ class Context implements ApiAwareInterface
         return $this->getPrismicApi()->master();
     }
 
+    /**
+     * Given a string repository ref, return the corresponding Ref object
+     * @param  string   $refId
+     * @return Ref|null Ref or null if the id is not valid or does not exist
+     */
     public function getRefWithString($refId)
     {
         return current(array_filter($this->getPrismicApi()->refs(), function ($item) use ($refId) {
