@@ -10,7 +10,7 @@ class PrismicViewHelperFactory implements FactoryInterface
 {
 
     /**
-     * Return Prismic head meta view helper
+     * Return Prismic (Document) view helper
      * @param  ServiceLocatorInterface $controllerPluginManager
      * @return Helper
      */
