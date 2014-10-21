@@ -86,7 +86,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException NetgluePrismic\Exception\InvalidArgumentException
+     * @expectedException NetgluePrismic\Exception\DocumentNotFoundException
      * @expectedExceptionMessage Expected a document instance or a valid document id
      */
     public function testFindBookmarkByDocumentThrowsExceptionForNonDocOrId()

@@ -124,7 +124,12 @@ class Context implements ApiAwareInterface
      */
     public function isBookmarked($doc)
     {
-        $name = $this->findBookmarkByDocument($doc);
+
+        try {
+            $name = $this->findBookmarkByDocument($doc);
+        } catch(Exception\DocumentNotFoundException $exception) {
+            $name = null;
+        }
 
         return !empty($name);
     }
@@ -139,7 +144,7 @@ class Context implements ApiAwareInterface
     {
         if (!$doc instanceof Document) {
             if (!$d = $this->getDocumentById($doc)) {
-                throw new Exception\InvalidArgumentException(sprintf(
+                throw new Exception\DocumentNotFoundException(sprintf(
                     'Expected a document instance or a valid document id. Received %s %s',
                     gettype($doc),
                     (is_scalar($doc) ? $doc : '')
