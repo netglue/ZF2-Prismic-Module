@@ -7,7 +7,7 @@ use Prismic\LinkResolver as PrismicResolver;
 use Zend\Mvc\Router\RouteStackInterface;
 use NetgluePrismic\Mvc\Router\RouterOptions;
 
-use NetgluePrismic\Context;
+use NetgluePrismic\ContextAwareTrait;
 use NetgluePrismic\ContextAwareInterface;
 
 use Prismic\Fragment\Link\LinkInterface;
@@ -17,6 +17,9 @@ use NetgluePrismic\Exception;
 
 class LinkResolver extends PrismicResolver implements ContextAwareInterface
 {
+
+    use ContextAwareTrait;
+
     /**
      * RouteStackInterface instance.
      *
@@ -35,12 +38,6 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
      * @var RouterOptions
      */
     protected $routerOptions;
-
-    /**
-     * Context Instance
-     * @var Context
-     */
-    protected $prismicContext;
 
     /**
      * Cached bookmark routes
@@ -283,25 +280,6 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
     public function getRouter()
     {
         return $this->router;
-    }
-
-    /**
-     * Set the Prismic Ref for this instance
-     * @param  Context $context
-     * @return void
-     */
-    public function setContext(Context $context)
-    {
-        $this->prismicContext = $context;
-    }
-
-    /**
-     * Return Current context
-     * @return Context
-     */
-    public function getContext()
-    {
-        return $this->prismicContext;
     }
 
     /**
