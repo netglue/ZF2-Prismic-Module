@@ -54,6 +54,10 @@ class PrismicApiClientFactory implements FactoryInterface
             }
         }
 
+        if(!empty($config['httpClient'])) {
+            $httpClient = $serviceLocator->get($config['httpClient']);
+        }
+
         /**
          * @see \Prismic\Api::get($apiUrl, $accesssToken, \Guzzle\Http\Client $client, \Prismic\Cache\CacheInterface $cache)
          */
