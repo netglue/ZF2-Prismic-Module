@@ -8,6 +8,9 @@ use Prismic\Api;
 use Zend\Session\Container;
 use Guzzle\Http\Exception\HttpException;
 
+use Prismic\Cache\CacheInterface;
+use NetgluePrismic\Cache\Facade;
+
 class PrismicApiClientFactory implements FactoryInterface
 {
 
@@ -25,8 +28,10 @@ class PrismicApiClientFactory implements FactoryInterface
         }
         $config = $config['prismic'];
 
+        $httpClient = $cache = null;
+
         $url = $config['api'];
-        $token = $configToken = isset($config['token']) ? $config['token'] : NULL;
+        $token = $configToken = isset($config['token']) ? $config['token'] : null;
 
         /**
          * Check the Session for a token and prefer that if it exists.
@@ -34,6 +39,19 @@ class PrismicApiClientFactory implements FactoryInterface
         $session = new Container('Prismic');
         if (isset($session->access_token)) {
             $token = $session->access_token;
+        }
+
+        /**
+         * See if a cache service name has been provided and wrap it in the facade
+         * if required
+         */
+        if(!empty($config['cache'])) {
+            $storage = $serviceLocator->get($config['cache']);
+            if( ! $storage instanceof CacheInterface) {
+                $cache = new Facade($storage);
+            } else {
+                $cache = $storage;
+            }
         }
 
         /**
@@ -45,9 +63,9 @@ class PrismicApiClientFactory implements FactoryInterface
          * has expired
          */
         try {
-            $api = Api::get($url, $token);
+            $api = Api::get($url, $token, $httpClient, $cache);
         } catch (HttpException $e) {
-            $api = Api::get($url, $configToken);
+            $api = Api::get($url, $configToken, $httpClient, $cache);
         }
 
         return $api;
