@@ -9,6 +9,26 @@ return array(
         //"clientSecret" => 'Some Client Secret',
 
         /**
+         * You can override the HTTP Client and the Cache adapter used by specifying a service name
+         * to retrieve during initialisation.
+         * The HTTP Client should implement \Guzzle\Http\ClientInterface
+         *
+         * The cache instance should be a regular zend cache storage instance or an instance that implements
+         * Prismic\Cache\CacheInterface. The former gets wrapped in a facade so that Prismic's Cache Interface is
+         * satisfied.
+         */
+        'httpClient' => null,
+        'cache' => null,
+
+        /**
+         * You can easily disable the api cache by setting 'cache' to the service name
+         * NetgluePrismic\Cache\Disable - This factory in Factory/NoCacheFactory simply
+         * returns an instance of Prismic\Cache\NoCache
+         */
+        // 'cache' => 'NetgluePrismic\Cache\Disable',
+
+
+        /**
          * Webhooks will only work if you first setup the webhook at your repository
          * with the correct url and add a secret to be sent with the JSON payload
          * then add that secret here:
