@@ -1,7 +1,8 @@
 # ZF2 Module for quick and easy installation of Prismic PHP SDK
 
 [![Build Status](https://travis-ci.org/netglue/ZF2-Prismic-Module.svg?branch=master)](https://travis-ci.org/netglue/ZF2-Prismic-Module)
-[![Coverage Status](https://img.shields.io/coveralls/netglue/ZF2-Prismic-Module.svg)](https://coveralls.io/r/netglue/ZF2-Prismic-Module)
+[![Code Climate](https://codeclimate.com/github/netglue/ZF2-Prismic-Module/badges/gpa.svg)](https://codeclimate.com/github/netglue/ZF2-Prismic-Module)
+[![Test Coverage](https://codeclimate.com/github/netglue/ZF2-Prismic-Module/badges/coverage.svg)](https://codeclimate.com/github/netglue/ZF2-Prismic-Module)
 
 ## Routing
 
