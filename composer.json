@@ -16,13 +16,13 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "require" : {
         "php" : ">=5.4",
         "zendframework/zendframework" : "2.3.*",
         "prismic/php-sdk": "dev-master"
     },
     "require-dev" : {
-        "satooshi/php-coveralls": "dev-master",
         "codeclimate/php-test-reporter": "dev-master"
     },
     "autoload" : {
