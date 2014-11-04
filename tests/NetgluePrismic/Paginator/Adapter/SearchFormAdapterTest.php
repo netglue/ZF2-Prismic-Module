@@ -19,7 +19,7 @@ class SearchFormAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function testApiAccess()
     {
-        $form = $this->api->forms()->pagination;
+        $form = $this->api->forms()->pagination->ref($this->api->master());
         $this->assertInstanceOf('Prismic\SearchForm', $form);
         $this->assertEquals(6, $form->count());
         return $form;
@@ -37,6 +37,12 @@ class SearchFormAdapterTest extends \PHPUnit_Framework_TestCase
         $pager->setCurrentPageNumber(1);
         $pager->setItemCountPerPage(2);
 
+        $this->assertSame(6, $pager->getTotalItemCount());
+
+        foreach($pager as $item) {
+            $this->assertInstanceOf('Prismic\Document', $item);
+            $this->assertSame('pager-test-doc', $item->getType());
+        }
 
     }
 
