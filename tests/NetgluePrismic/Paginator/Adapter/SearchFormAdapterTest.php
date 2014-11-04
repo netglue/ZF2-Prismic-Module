@@ -44,6 +44,34 @@ class SearchFormAdapterTest extends \PHPUnit_Framework_TestCase
             $this->assertSame('pager-test-doc', $item->getType());
         }
 
+        return $pager;
+    }
+
+    public function testExpectedBehaviour()
+    {
+        $form = $this->api->forms()
+            ->pagination
+            ->ref($this->api->master())
+            ->orderings('[my.pager-test-doc.priority]');
+
+        $adapter = new SearchFormAdapter($form);
+        $pager = new Paginator($adapter);
+        $pager->setCurrentPageNumber(1);
+        $pager->setItemCountPerPage(4);
+
+        $items = $pager->getItemsByPage(1);
+        $this->assertCount(4, $items);
+        $this->assertContainsOnlyInstancesOf('Prismic\Document', $items);
+        $this->assertEquals(10, $items[0]->get('pager-test-doc.priority')->asText());
+        $this->assertEquals(20, $items[1]->get('pager-test-doc.priority')->asText());
+        $this->assertEquals(30, $items[2]->get('pager-test-doc.priority')->asText());
+        $this->assertEquals(40, $items[3]->get('pager-test-doc.priority')->asText());
+
+        $items = $pager->getItemsByPage(2);
+        $this->assertCount(2, $items);
+        $this->assertContainsOnlyInstancesOf('Prismic\Document', $items);
+        $this->assertEquals(50, $items[0]->get('pager-test-doc.priority')->asText());
+        $this->assertEquals(60, $items[1]->get('pager-test-doc.priority')->asText());
     }
 
 }

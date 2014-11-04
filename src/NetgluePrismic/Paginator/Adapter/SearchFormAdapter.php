@@ -41,7 +41,13 @@ class SearchFormAdapter implements AdapterInterface
      */
     public function getItems($offset, $itemCountPerPage)
     {
-        $response = $this->form->pageSize($itemCountPerPage)->page($offset)->submit();
+        $page = 1;
+        if($offset > 0) {
+            $page = ($offset / $itemCountPerPage) + 1;
+        }
+
+        $response = $this->form->pageSize($itemCountPerPage)->page($page)->submit();
+
         return $response->getResults();
     }
 
