@@ -106,7 +106,7 @@ class Url extends AbstractHelper
             return '';
         }
 
-        return $this->getLinkResolver()->resolve($this->target);
+        return (string) $this->getLinkResolver()->resolve($this->target);
     }
 
     /**
