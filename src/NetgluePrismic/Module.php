@@ -142,7 +142,7 @@ class Module implements
                 // Prismic SDK Api \Prismic\Api
                 'Prismic\Api' => 'NetgluePrismic\Factory\PrismicApiClientFactory',
                 // Site-wide context \NetgluePrismic\Context
-                'Prismic\Context' => 'NetgluePrismic\Factory\ContextFactory',
+                'NetgluePrismic\Context' => 'NetgluePrismic\Factory\ContextFactory',
                 // Options for the router/link resolver
                 'NetgluePrismic\Mvc\Router\RouterOptions' => 'NetgluePrismic\Mvc\Service\RouterOptionsFactory',
                 // Link Resolver
@@ -170,6 +170,7 @@ class Module implements
             'aliases' => array(
                 'PrismicApiClient' => 'Prismic\Api',
                 'PrismicRouterOptions' => 'NetgluePrismic\Mvc\Router\RouterOptions',
+                'Prismic\Context' => 'NetgluePrismic\Context'
             ),
         );
     }
@@ -218,11 +219,13 @@ class Module implements
             'factories' => array(
                 'NetgluePrismic\View\Helper\Prismic' => 'NetgluePrismic\View\Service\PrismicViewHelperFactory',
                 'NetgluePrismic\View\Helper\Url'     => 'NetgluePrismic\View\Service\UrlViewHelperFactory',
+                'NetgluePrismic\View\Helper\Finder'  => 'NetgluePrismic\View\Service\FinderViewHelperFactory',
             ),
             'aliases' => array(
                 'prismic'       => 'NetgluePrismic\View\Helper\Prismic',
                 'prismicUrl'    => 'NetgluePrismic\View\Helper\Url',
                 'editAtPrismic' => 'NetgluePrismic\View\Helper\EditAtPrismic',
+                'prismicFinder' => 'NetgluePrismic\View\Helper\Finder',
             ),
         );
     }
