@@ -147,6 +147,7 @@ class Module implements
                 'NetgluePrismic\Mvc\Router\RouterOptions' => 'NetgluePrismic\Mvc\Service\RouterOptionsFactory',
                 // Link Resolver
                 'NetgluePrismic\Mvc\LinkResolver' => 'NetgluePrismic\Mvc\Service\LinkResolverFactory',
+                'NetgluePrismic\Mvc\LinkGenerator' => 'NetgluePrismic\Mvc\Service\LinkGeneratorFactory',
                 // Session for storing access tokens and selected ref/release
                 'NetgluePrismic\Session\PrismicContainer' => 'NetgluePrismic\Session\ContainerFactory',
                 // Service to return a NoCache instance to effectively disable caching
