@@ -199,9 +199,11 @@ class Module implements
         return array(
             'factories' => array(
                 'NetgluePrismic\Mvc\Controller\Plugin\Prismic' => 'NetgluePrismic\Mvc\Service\PrismicControllerPluginFactory',
+                'NetgluePrismic\Mvc\Controller\Plugin\Url'     => 'NetgluePrismic\Mvc\Service\UrlControllerPluginFactory',
             ),
             'aliases' => array(
-                'Prismic' => 'NetgluePrismic\Mvc\Controller\Plugin\Prismic',
+                'Prismic'       => 'NetgluePrismic\Mvc\Controller\Plugin\Prismic',
+                'prismicUrl'    => 'NetgluePrismic\Mvc\Controller\Plugin\Url',
             ),
         );
     }
