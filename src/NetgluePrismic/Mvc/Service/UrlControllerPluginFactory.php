@@ -1,22 +1,22 @@
 <?php
 
-namespace NetgluePrismic\View\Service;
+namespace NetgluePrismic\Mvc\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use NetgluePrismic\View\Helper\Url;
+use NetgluePrismic\Mvc\Controller\Plugin\Url;
 
-class UrlViewHelperFactory implements FactoryInterface
+class UrlControllerPluginFactory implements FactoryInterface
 {
 
     /**
-     * Return Prismic Url Helper
+     * Return Prismic Url Plugin
      * @param  ServiceLocatorInterface $controllerPluginManager
      * @return Url
      */
-    public function createService(ServiceLocatorInterface $viewPluginManager)
+    public function createService(ServiceLocatorInterface $controllerPluginManager)
     {
-        $serviceLocator = $viewPluginManager->getServiceLocator();
+        $serviceLocator = $controllerPluginManager->getServiceLocator();
 
         $linkResolver  = $serviceLocator->get('NetgluePrismic\Mvc\LinkResolver');
         $linkGenerator = $serviceLocator->get('NetgluePrismic\Mvc\LinkGenerator');

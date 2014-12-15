@@ -1,21 +1,18 @@
 <?php
+/**
+ * A controller plugin for generating URLs to Prismic Documents
+ */
 
-namespace NetgluePrismic\View\Helper;
+namespace NetgluePrismic\Mvc\Controller\Plugin;
 
-use Zend\View\Helper\AbstractHelper;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
-use Prismic\Fragment\Link\LinkInterface;
 use NetgluePrismic\Mvc\LinkResolver;
 use NetgluePrismic\Mvc\LinkGenerator;
 
 
-class Url extends AbstractHelper
+class Url extends AbstractPlugin
 {
-
-    /**
-     * @var LinkInterface|null The Link Target
-     */
-    private $target;
 
     /**
      * @var LinkResolver The link resolver
@@ -40,48 +37,38 @@ class Url extends AbstractHelper
     }
 
     /**
-     * Invoke, optionally setting the link target
+     * Invoke. Returns sel with no argument or the string url for the given target
+     * @param \Prismic\Document|string $target If non-null, hould be a document or an id
+     * @return string|self Returns self when no argument is provided or the string url of the argument
      */
     public function __invoke($target = null)
     {
         if(!is_null($target)) {
-            $this->setTarget($target);
+            return $this->url($target);
         }
 
         return $this;
     }
 
     /**
-     * Set the link target
-     * @param LinkInterface|Document|string $target An object or the id of a document
+     * Given a document or document id, return the url for it as a string
+     * @param mixed $target
+     * @return string
      */
-    public function setTarget($target)
+    public function url($target)
     {
-        $this->target = $this->linkGenerator->generate($target);
-
-        return $this;
+        return $this->linkResolver->resolve(
+            $this->linkGenerator->generate($target)
+        );
     }
 
     /**
-     * Return the Link Resolver
+     * Get Link Resolver
      * @return LinkResolver
      */
     public function getLinkResolver()
     {
         return $this->linkResolver;
-    }
-
-    /**
-     * Serialize to string
-     * @return string
-     */
-    public function __toString()
-    {
-        if(!$this->target instanceof LinkInterface) {
-            return '';
-        }
-
-        return (string) $this->getLinkResolver()->resolve($this->target);
     }
 
 }

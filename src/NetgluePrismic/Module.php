@@ -147,6 +147,7 @@ class Module implements
                 'NetgluePrismic\Mvc\Router\RouterOptions' => 'NetgluePrismic\Mvc\Service\RouterOptionsFactory',
                 // Link Resolver
                 'NetgluePrismic\Mvc\LinkResolver' => 'NetgluePrismic\Mvc\Service\LinkResolverFactory',
+                'NetgluePrismic\Mvc\LinkGenerator' => 'NetgluePrismic\Mvc\Service\LinkGeneratorFactory',
                 // Session for storing access tokens and selected ref/release
                 'NetgluePrismic\Session\PrismicContainer' => 'NetgluePrismic\Session\ContainerFactory',
                 // Service to return a NoCache instance to effectively disable caching
@@ -198,9 +199,11 @@ class Module implements
         return array(
             'factories' => array(
                 'NetgluePrismic\Mvc\Controller\Plugin\Prismic' => 'NetgluePrismic\Mvc\Service\PrismicControllerPluginFactory',
+                'NetgluePrismic\Mvc\Controller\Plugin\Url'     => 'NetgluePrismic\Mvc\Service\UrlControllerPluginFactory',
             ),
             'aliases' => array(
-                'Prismic' => 'NetgluePrismic\Mvc\Controller\Plugin\Prismic',
+                'Prismic'       => 'NetgluePrismic\Mvc\Controller\Plugin\Prismic',
+                'prismicUrl'    => 'NetgluePrismic\Mvc\Controller\Plugin\Url',
             ),
         );
     }
