@@ -18,9 +18,10 @@ class UrlViewHelperFactory implements FactoryInterface
     {
         $serviceLocator = $viewPluginManager->getServiceLocator();
 
-        $linkResolver = $serviceLocator->get('NetgluePrismic\Mvc\LinkResolver');
+        $linkResolver  = $serviceLocator->get('NetgluePrismic\Mvc\LinkResolver');
+        $linkGenerator = $serviceLocator->get('NetgluePrismic\Mvc\LinkGenerator');
 
-        $helper = new Url($linkResolver);
+        $helper = new Url($linkResolver, $linkGenerator);
 
         return $helper;
     }

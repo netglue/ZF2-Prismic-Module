@@ -5,10 +5,9 @@ namespace NetgluePrismic\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 
 use Prismic\Fragment\Link\LinkInterface;
-use Prismic\Fragment\Link\DocumentLink;
-use Prismic\Document;
-use NetgluePrismic\Exception;
 use NetgluePrismic\Mvc\LinkResolver;
+use NetgluePrismic\Mvc\LinkGenerator;
+
 
 class Url extends AbstractHelper
 {
@@ -24,13 +23,20 @@ class Url extends AbstractHelper
     private $linkResolver;
 
     /**
+     * @var LinkGenerator The link generator
+     */
+    private $linkGenerator;
+
+    /**
      * Depends on a link resolver
-     * @param LinkResolver $resolver
+     * @param LinkResolver  $resolver
+     * @param LinkGenerator $generator
      * @return void
      */
-    public function __construct(LinkResolver $resolver)
+    public function __construct(LinkResolver $resolver, LinkGenerator $generator)
     {
         $this->linkResolver = $resolver;
+        $this->linkGenerator = $generator;
     }
 
     /**
@@ -51,29 +57,7 @@ class Url extends AbstractHelper
      */
     public function setTarget($target)
     {
-        $link = null;
-        $arg = $target;
-
-        if(is_string($target)) {
-            // Assume a document id
-            $target = $this->getContext()->getDocumentById($target);
-        }
-
-        if($target instanceof LinkInterface) {
-            $link = $target;
-        }
-
-        if($target instanceof Document) {
-            $link = $this->getLink($target);
-        }
-
-        if(! $link instanceof LinkInterface) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Cannot resolve %s to a document link',
-                is_scalar($arg) ? $arg : gettype($arg)));
-        }
-
-        $this->target = $link;
+        $this->target = $this->linkGenerator->generate($target);
 
         return $this;
     }
@@ -88,15 +72,6 @@ class Url extends AbstractHelper
     }
 
     /**
-     * Return api context
-     * @return \NetgluePrismic\Context
-     */
-    protected function getContext()
-    {
-        return $this->getLinkResolver()->getContext();
-    }
-
-    /**
      * Serialize to string
      * @return string
      */
@@ -107,22 +82,6 @@ class Url extends AbstractHelper
         }
 
         return (string) $this->getLinkResolver()->resolve($this->target);
-    }
-
-    /**
-     * This is likely to go away as we should probably be making links in the document, or via the link resolver perhaps
-     * @param Document $doc
-     * @return DocumentLink
-     */
-    private function getLink(Document $doc)
-    {
-        return new DocumentLink(
-            $doc->getId(),
-            $doc->getType(),
-            $doc->getTags(),
-            $doc->getSlug(),
-            false
-        );
     }
 
 }
