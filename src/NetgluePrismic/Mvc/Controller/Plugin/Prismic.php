@@ -20,6 +20,7 @@ use Prismic\Document;
 use Prismic\Fragment\Link\DocumentLink;
 use NetgluePrismic\Exception;
 use NetgluePrismic\Mvc\Router\RouterOptions;
+use NetgluePrismic\Mvc\LinkGenerator;
 
 use NetgluePrismic\View\Model\DocumentViewModel;
 use Prismic\LinkResolver;
@@ -45,6 +46,11 @@ class Prismic extends AbstractPlugin implements
      * @var LinkResolver
      */
     protected $linkResolver;
+
+    /**
+     * @var LinkGenerator The link generator
+     */
+    private $linkGenerator;
 
     /**
      * Current Document
@@ -174,13 +180,7 @@ class Prismic extends AbstractPlugin implements
      */
     public function getRouteParamsForDocument(Document $document)
     {
-        $id = $document->getId();
-        $type = $document->getType();
-        $tags = $document->getTags();
-        $slug = $document->getSlug();
-        $isBroken = false; // ??
-        $link = new DocumentLink($id, $type, $tags, $slug, $isBroken);
-
+        $link = $this->getLinkGenerator()->generate($document);
         return $this->getLinkResolver()->getRouteParams($link);
     }
 
@@ -282,6 +282,18 @@ class Prismic extends AbstractPlugin implements
     public function setLinkResolver(LinkResolver $linkResolver)
     {
         $this->linkResolver = $linkResolver;
+
+        return $this;
+    }
+
+    public function getLinkGenerator()
+    {
+        return $this->linkGenerator;
+    }
+
+    public function setLinkGenerator(LinkGenerator $linkGenerator)
+    {
+        $this->linkGenerator = $linkGenerator;
 
         return $this;
     }
