@@ -38,15 +38,52 @@ class FacadeTest extends \PHPUnit_Framework_TestCase
         $key = 'prismic_cache_test';
 
         $this->assertNull($cache->get($key));
-        $this->assertTrue($cache->set($key, $value));
+        $this->assertFalse($cache->has($key));
+        $this->assertNull($cache->set($key, $value));
+        $this->assertTrue($cache->has($key));
         $this->assertSame($value, $cache->get($key));
-        $this->assertTrue($cache->delete($key));
+        $this->assertNull($cache->delete($key));
         $this->assertNull($cache->get($key));
 
         $cache->set($key, $value);
         $this->assertSame($value, $cache->get($key));
-        $this->assertTrue($cache->clear());
+        $this->assertNull($cache->clear());
         $this->assertNull($cache->get($key));
+
+    }
+
+    /**
+     * @depends testCreateInstance
+     */
+    public function testNormalizeKeyReturnsUnmodifiedKey(Facade $cache)
+    {
+        $key = str_repeat('a', 251);
+        $this->assertSame($key, $cache->normalizeKey($key));
+    }
+
+    public function testMemcachedStorageNormalizesKey()
+    {
+        $adapter = StorageFactory::factory(
+            array(
+                'adapter' => 'memcached',
+                'options' => array(
+                    'ttl' => 2 * 60 * 60,
+                    'servers' => array(
+                        array(
+                            'host' => 'localhost',
+                            'port' => 11211,
+                        ),
+                    ),
+                ),
+            )
+        );
+        $facade = new Facade($adapter);
+
+        $key = str_repeat('http://www.foo.bar.com/Blah?=foo&baz=bat', 20);
+        $expect = md5($key);
+
+        $this->assertSame($expect, $facade->normalizeKey($key));
+
 
     }
 
