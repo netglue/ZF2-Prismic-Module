@@ -6,6 +6,8 @@ use Prismic\Cache\CacheInterface;
 
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Storage\FlushableInterface;
+use Zend\Cache\Storage\Adapter\Memcached;
+
 
 class Facade implements CacheInterface
 {
@@ -26,6 +28,17 @@ class Facade implements CacheInterface
     }
 
     /**
+     * Whether the given key exists in the cache
+     * @param string $key
+     * @return bool
+     */
+    public function has($key)
+    {
+        $normalizedKey = $this->normalizeKey($key);
+        return $this->storage->hasItem($normalizedKey);
+    }
+
+    /**
      * Returns the value of a cache entry from its key
      *
      * @param  string    $key the key of the cache entry
@@ -33,7 +46,8 @@ class Facade implements CacheInterface
      */
     public function get($key)
     {
-        return $this->storage->getItem($key);
+        $normalizedKey = $this->normalizeKey($key);
+        return $this->storage->getItem($normalizedKey);
     }
 
     /**
@@ -42,7 +56,7 @@ class Facade implements CacheInterface
      * @param string    $key   the key of the cache entry
      * @param mixed     $value the value of the entry
      * @param integer   $ttl   the time until this cache entry expires
-     * @return bool
+     * @return void
      */
     public function set($key, $value, $ttl = 0)
     {
@@ -53,36 +67,31 @@ class Facade implements CacheInterface
          * than 5 seconds (The value used in the prismic sdk), but providing you have
          * the shipped cache buster working, the cache will be flushed on api update
          */
-        return $this->storage->setItem($key, $value);
+        $normalizedKey = $this->normalizeKey($key);
+        $this->storage->setItem($normalizedKey, $value);
     }
 
     /**
      * Deletes a cache entry, from its key
      *
      * @param string $key the key of the cache entry
-     * @return bool
+     * @return void
      */
     public function delete($key)
     {
-        return $this->storage->removeItem($key);
+        $normalizedKey = $this->normalizeKey($key);
+        $this->storage->removeItem($normalizedKey);
     }
 
     /**
      * Clears the whole cache
-     * @return bool
+     * @return void
      */
     public function clear()
     {
         if($this->storage instanceof FlushableInterface) {
-            return $this->storage->flush();
+            $this->storage->flush();
         }
-
-        /**
-         * All Zend Storage instances implement FlushableInterface
-         */
-        // @codeCoverageIgnoreStart
-        return false;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -92,6 +101,27 @@ class Facade implements CacheInterface
     public function getStorage()
     {
         return $this->storage;
+    }
+
+    /**
+     * In certain situations, the cache key is modified to prevent un-needed exceptions/errors
+     *
+     * This method boils down to Memcached not accepting keys with a length greater than 250
+     * characters. If the storage mechanism is Memcached, then the key is returned hashed.
+     *
+     * The method is public so that client code can discover what the normalized key might be
+     * if there was a need.
+     *
+     * @param string $key The unmodified cache key to use
+     * @return string the possibly modified cache key
+     */
+    public function normalizeKey($key)
+    {
+        if ($this->storage instanceof Memcached && strlen($key) > 250) {
+            return md5($key);
+        }
+
+        return $key;
     }
 
 }
