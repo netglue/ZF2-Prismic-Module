@@ -20,7 +20,8 @@
     "require" : {
         "php" : ">=5.4",
         "zendframework/zendframework" : "2.3.*",
-        "prismic/php-sdk": "dev-master"
+        "prismic/php-sdk": "dev-master",
+        "egeloen/http-adapter": "~0.1"
     },
     "require-dev" : {
         "codeclimate/php-test-reporter": "dev-master"
