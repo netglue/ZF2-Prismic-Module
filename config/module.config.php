@@ -3,30 +3,41 @@
 return array(
 
     'prismic' => array(
+        
+        /**
+         * Basic configuration
+         * As long as you provide the following, you should be good to go:
+         * 
+         * You'll find the tokens, client ID etc in your repository settings:
+         */
         //"api" => "https://example.prismic.io/api",
         //"token" => 'Some Permanent Token',
         //"clientId" => 'Some Client ID',
         //"clientSecret" => 'Some Client Secret',
 
         /**
-         * You can override the HTTP Client and the Cache adapter used by specifying a service name
-         * to retrieve during initialisation.
-         * The HTTP Client should implement \Guzzle\Http\ClientInterface
+         * To override the HttpClient, it must implement \Ivory\HttpAdapter\HttpAdapterInterface
+         * See more at https://github.com/egeloen/ivory-http-adapter
+         * 
+         * The Prismic.io SDK requires this interface. The value of 'httpClient'
+         * should be a string service name that we can retrieve from the service locator
+         */
+        
+        'httpClient' => null,
+        
+        /**
+         * You can override the Cache adapter used by specifying a service name
          *
          * The cache instance should be a regular zend cache storage instance or an instance that implements
          * Prismic\Cache\CacheInterface. The former gets wrapped in a facade so that Prismic's Cache Interface is
          * satisfied.
-         */
-        'httpClient' => null,
-        'cache' => null,
-
-        /**
+         *
          * You can easily disable the api cache by setting 'cache' to the service name
          * NetgluePrismic\Cache\Disable - This factory in Factory/NoCacheFactory simply
-         * returns an instance of Prismic\Cache\NoCache
+         * returns an instance of Prismic\Cache\NoCache - i.e.
+         * 'cache' => 'NetgluePrismic\Cache\Disable',
          */
-        // 'cache' => 'NetgluePrismic\Cache\Disable',
-
+        'cache' => null,
 
         /**
          * Webhooks will only work if you first setup the webhook at your repository

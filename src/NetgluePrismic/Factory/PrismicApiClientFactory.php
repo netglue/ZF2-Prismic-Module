@@ -6,7 +6,7 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Prismic\Api;
 use Zend\Session\Container;
-use Guzzle\Http\Exception\HttpException;
+use Ivory\HttpAdapter\HttpAdapterException;
 
 use Prismic\Cache\CacheInterface;
 use NetgluePrismic\Cache\Facade;
@@ -68,7 +68,7 @@ class PrismicApiClientFactory implements FactoryInterface
          */
         try {
             $api = Api::get($url, $token, $httpClient, $cache);
-        } catch (HttpException $e) {
+        } catch (HttpAdapterException $e) {
             $api = Api::get($url, $configToken, $httpClient, $cache);
         }
 
