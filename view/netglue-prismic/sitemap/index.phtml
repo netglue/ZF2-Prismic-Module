@@ -1,4 +1,3 @@
 <?php
 
-$map = (string) $this->sitemapIndex($this->sitemaps)->render();
-echo $this->escapeHtml($map);
+echo (string) $this->sitemapIndex($this->sitemaps)->render();
