@@ -152,7 +152,7 @@ class Module implements
                 'NetgluePrismic\Session\PrismicContainer' => 'NetgluePrismic\Session\ContainerFactory',
                 // Service to return a NoCache instance to effectively disable caching
                 'NetgluePrismic\Cache\Disable' => 'NetgluePrismic\Factory\NoCacheFactory',
-
+                'NetgluePrismic\Service\Sitemap' => 'NetgluePrismic\Factory\SitemapFactory',
                 /**
                  * Listeners
                  */
@@ -185,6 +185,7 @@ class Module implements
         return array(
             'factories' => array(
                 'NetgluePrismic\Mvc\Controller\PrismicController' => 'NetgluePrismic\Mvc\Service\PrismicControllerFactory',
+                'NetgluePrismic\Mvc\Controller\SitemapController' => 'NetgluePrismic\Mvc\Service\SitemapControllerFactory',
             ),
         );
     }
@@ -218,6 +219,7 @@ class Module implements
         return array(
             'invokables' => array(
                 'NetgluePrismic\View\Helper\EditAtPrismic' => 'NetgluePrismic\View\Helper\EditAtPrismic',
+                'NetgluePrismic\View\Helper\SitemapIndex'  => 'NetgluePrismic\View\Helper\SitemapIndex',
             ),
             'factories' => array(
                 'NetgluePrismic\View\Helper\Prismic' => 'NetgluePrismic\View\Service\PrismicViewHelperFactory',
@@ -229,6 +231,7 @@ class Module implements
                 'prismicUrl'    => 'NetgluePrismic\View\Helper\Url',
                 'editAtPrismic' => 'NetgluePrismic\View\Helper\EditAtPrismic',
                 'prismicFinder' => 'NetgluePrismic\View\Helper\Finder',
+                'sitemapIndex'  => 'NetgluePrismic\View\Helper\SitemapIndex',
             ),
         );
     }

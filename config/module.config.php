@@ -70,6 +70,30 @@ return array(
             ),
         ),
 
+        /**
+         * Automatic XML Site Map generation works on the assumption that
+         * you provide a list of document types you want included.
+         * Sitemaps are split up into multiple documents with a sitemap index file
+         *
+         * You would setup sitemap configuration for each type of document that
+         * uses different fragment names for the relevant xml
+         */
+        'sitemaps' => array(
+            'cache' => null,
+            'sitemaps' => array(
+                'portfolio' => array(
+                    'name' => 'portfolio',
+                    'documentTypes' => array(
+                        'website',
+                    ),
+                    'propertyMap' => array(
+                        'changefreq' => 'my_change_freq_fragment_name',
+                        'lastmod' => 'not-much-use-yet',
+                        'priority' => 'my-priority',
+                    ),
+                ),
+            ),
+        ),
     ),
 
     /**
@@ -120,6 +144,29 @@ return array(
                     'defaults' => array(
                         'controller' => 'NetgluePrismic\Mvc\Controller\PrismicController',
                         'action' => 'webhook',
+                    ),
+                ),
+            ),
+            // Render XML Sitemaps
+            'prismic-sitemap' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/prismic-sitemap.xml',
+                    'defaults' => array(
+                        'controller' => 'NetgluePrismic\Mvc\Controller\SitemapController',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'container' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:name].xml',
+                            'defaults' => array(
+                                'action' => 'sitemap',
+                            ),
+                        ),
                     ),
                 ),
             ),
