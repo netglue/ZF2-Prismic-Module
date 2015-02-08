@@ -88,23 +88,34 @@ return array(
          *
          * You would setup sitemap configuration for each type of document that
          * uses different fragment names for the relevant xml
+         * By default, you'll end up with an empty sitemap index file at the relevant url.
+         *
+         * It's important to note that the default url as set in the config below
+         * for the sitemap index file is /prismic-sitemap.xml
+         * It's expected that you'd change this to the usual /sitemap.xml but it's set this way 
+         * so as to not conflict with any existing data.
+         *
+         * Caching is a really good idea. Provide the service name of the cache you want to use
          */
+        
+        /*
         'sitemaps' => array(
             'cache' => null,
             'sitemaps' => array(
-                'portfolio' => array(
-                    'name' => 'portfolio',
+                array(
+                    'name' => 'blog-posts',
                     'documentTypes' => array(
-                        'website',
+                        'blog-posting',
                     ),
                     'propertyMap' => array(
                         'changefreq' => 'my_change_freq_fragment_name',
-                        'lastmod' => 'not-much-use-yet',
-                        'priority' => 'my-priority',
+                        'lastmod'    => 'not-much-use-yet',
+                        'priority'   => 'my-priority',
                     ),
                 ),
             ),
         ),
+        */
     ),
 
     /**

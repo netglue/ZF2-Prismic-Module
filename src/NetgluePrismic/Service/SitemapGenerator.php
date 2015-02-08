@@ -58,11 +58,16 @@ class SitemapGenerator implements ContextAwareInterface,
      * @var array An array that maps a prismic fragment name to the property of a Zend\Navigation\Page instance
      */
     protected $propertyMap = array(
-        'priority'   => 'priority',
-        'changefreq' => 'change_freq',
+        'priority'   => null,
+        'changefreq' => null,
         'lastmod'    => null,
     );
-
+    
+    public function setPropertyMap(array $map)
+    {
+        $this->propertyMap = $map;
+    }
+    
     /**
      * @param LinkResolver  $resolver
      * @return void
