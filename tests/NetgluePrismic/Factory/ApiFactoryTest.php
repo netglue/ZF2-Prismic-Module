@@ -3,7 +3,7 @@ namespace NetgluePrismic\Factory;
 
 use NetgluePrismic\bootstrap;
 
-use Guzzle\Http\Client;
+use Ivory\HttpAdapter\CurlHttpAdapter as HttpAdapter;
 
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
@@ -31,14 +31,14 @@ class ApiFactoryTest extends \PHPUnit_Framework_TestCase
         $config['prismic']['httpClient'] = 'CustomClient';
         $services->setService('config', $config);
 
-        $http = new Client;
+        $http = new HttpAdapter;
 
         $services->setService('CustomClient', $http);
 
         $api = $services->get('Prismic\Api');
 
-        $this->assertInstanceOf('Guzzle\Http\Client', $api->getClient());
-        $this->assertSame($http, $api->getClient());
+        $this->assertInstanceOf('Ivory\HttpAdapter\CurlHttpAdapter', $api->getHttpAdapter());
+        $this->assertSame($http, $api->getHttpAdapter());
     }
 
 
