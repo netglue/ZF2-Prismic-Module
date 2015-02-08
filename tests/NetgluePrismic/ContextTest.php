@@ -11,7 +11,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $cache = new \Prismic\Cache\DefaultCache();
+        $cache = new \Prismic\Cache\ApcCache();
         $cache->clear();
         $sl = bootstrap::getServiceManager();
         $this->context = $sl->get('Prismic\Context');
