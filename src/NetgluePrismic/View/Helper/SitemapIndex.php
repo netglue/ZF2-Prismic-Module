@@ -4,6 +4,7 @@ namespace NetgluePrismic\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use DOMDocument;
+
 class SitemapIndex extends AbstractHelper
 {
     /**
@@ -20,23 +21,43 @@ class SitemapIndex extends AbstractHelper
      */
     protected $formatOutput = false;
 
+    /**
+     * List of sitemap URLs
+     * @var array
+     */
     protected $urls = array();
 
-    public function __invoke($urls = null) {
-        if(null !== $urls) {
+    /**
+     * Absolute Server URL
+     * @var string
+     */
+    protected $serverUrl;
+
+    /**
+     * @param  array $urls
+     * @return self
+     */
+    public function __invoke($urls = null)
+    {
+        if (null !== $urls) {
             $this->setUrls($urls);
         }
 
         return $this;
     }
 
+    /**
+     * Set Sitemap URLs
+     * @param  array $urls
+     * @return self
+     */
     public function setUrls(array $urls)
     {
         $this->urls = array();
-        foreach($urls as $data) {
-            if(is_string($data)) {
+        foreach ($urls as $data) {
+            if (is_string($data)) {
                 $this->addUrl($data);
-            } elseif(is_array($data)) {
+            } elseif (is_array($data)) {
                 $this->addUrl(current($data), end($data));
             }
         }
@@ -44,7 +65,14 @@ class SitemapIndex extends AbstractHelper
         return $this;
     }
 
-    public function addUrl($url, $lastmod = null) {
+    /**
+     * Add a url with an optional lastmod property
+     * @param  string $url
+     * @param  string $lastmod
+     * @return self
+     */
+    public function addUrl($url, $lastmod = null)
+    {
         $this->urls[] = array(
             'url'     => $url,
             'lastmod' => $lastmod,
@@ -53,13 +81,22 @@ class SitemapIndex extends AbstractHelper
         return $this;
     }
 
+    /**
+     * Render XML
+     * @return string
+     */
     public function render()
     {
         $dom = $this->getDomSitemap();
         $xml = $dom->saveXML();
+
         return rtrim($xml, PHP_EOL);
     }
 
+    /**
+     * Return the sitemap as DOMDocument
+     * @return DOMDocument
+     */
     public function getDomSitemap()
     {
         $dom = new DOMDocument('1.0', 'UTF-8');
@@ -68,14 +105,14 @@ class SitemapIndex extends AbstractHelper
         $index = $dom->createElementNS(self::SITEMAP_NS, 'sitemapindex');
         $dom->appendChild($index);
 
-        foreach($this->urls as $data) {
+        foreach ($this->urls as $data) {
             if (!$url = $this->url($data['url'])) {
                 continue;
             }
             $sitemapNode = $dom->createElementNS(self::SITEMAP_NS, 'sitemap');
             $index->appendChild($sitemapNode);
             $sitemapNode->appendChild($dom->createElementNS(self::SITEMAP_NS, 'loc', $url));
-            if(isset($data['lastmod'])) {
+            if (isset($data['lastmod'])) {
                 // Convert whatever lastmod is to date('c') and add node to $sitemapNode
             }
         }
@@ -87,7 +124,7 @@ class SitemapIndex extends AbstractHelper
     /**
      * Returns an escaped absolute URL for the given url
      *
-     * @param  string $url
+     * @param  string      $url
      * @return string|null
      */
     public function url($url)
@@ -97,7 +134,7 @@ class SitemapIndex extends AbstractHelper
         } elseif ($url{0} == '/') {
             // href is relative to root; use serverUrl helper
             $url = $this->getServerUrl() . $url;
-        } elseif (preg_match('/^[a-z]+:/im', (string) $href)) {
+        } elseif (preg_match('/^[a-z]+:/im', (string) $url)) {
             // scheme is given in href; assume absolute URL already
             $url = (string) $url;
         } else {
@@ -116,6 +153,7 @@ class SitemapIndex extends AbstractHelper
     protected function xmlEscape($string)
     {
         $escaper = $this->view->plugin('escapeHtml');
+
         return $escaper($string);
     }
 
@@ -137,12 +175,13 @@ class SitemapIndex extends AbstractHelper
     /**
      * Sets whether XML output should be formatted
      *
-     * @param  bool $formatOutput
+     * @param  bool    $formatOutput
      * @return Sitemap
      */
     public function setFormatOutput($formatOutput = true)
     {
         $this->formatOutput = (bool) $formatOutput;
+
         return $this;
     }
 

@@ -15,7 +15,7 @@ class Finder extends AbstractHelper implements ContextAwareInterface
 
     /**
      * Requires a context instance
-     * @param Context $context
+     * @param  Context $context
      * @return void
      */
     public function __construct(Context $context)
@@ -34,7 +34,7 @@ class Finder extends AbstractHelper implements ContextAwareInterface
 
     /**
      * Locate a document by it's id
-     * @param string $id
+     * @param  string        $id
      * @return Document|null
      */
     public function getDocumentById($id)
