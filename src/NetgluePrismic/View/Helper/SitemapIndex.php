@@ -6,6 +6,9 @@ use Zend\View\Helper\AbstractHelper;
 use DOMDocument;
 use NetgluePrismic\Exception;
 
+/**
+ * Shameless copy/paste from \Zend\View\Helper\Navigation\Sitemap
+ */
 class SitemapIndex extends AbstractHelper
 {
     /**
@@ -14,6 +17,8 @@ class SitemapIndex extends AbstractHelper
      * @var string
      */
     const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+
+    const SITEMAP_XSD = 'http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd';
 
     /**
      * Whether XML output should be formatted
@@ -143,7 +148,8 @@ class SitemapIndex extends AbstractHelper
             }
         }
 
-        // Maybe validate schema
+        // Maybe validate schema just like in \Zend\View\Helper\Navigation\Sitemap
+
         return $dom;
     }
 
