@@ -3,11 +3,11 @@
 return array(
 
     'prismic' => array(
-        
+
         /**
          * Basic configuration
          * As long as you provide the following, you should be good to go:
-         * 
+         *
          * You'll find the tokens, client ID etc in your repository settings:
          */
         //"api" => "https://example.prismic.io/api",
@@ -18,13 +18,13 @@ return array(
         /**
          * To override the HttpClient, it must implement \Ivory\HttpAdapter\HttpAdapterInterface
          * See more at https://github.com/egeloen/ivory-http-adapter
-         * 
+         *
          * The Prismic.io SDK requires this interface. The value of 'httpClient'
          * should be a string service name that we can retrieve from the service locator
          */
-        
+
         'httpClient' => null,
-        
+
         /**
          * You can override the Cache adapter used by specifying a service name
          *
@@ -92,12 +92,12 @@ return array(
          *
          * It's important to note that the default url as set in the config below
          * for the sitemap index file is /prismic-sitemap.xml
-         * It's expected that you'd change this to the usual /sitemap.xml but it's set this way 
+         * It's expected that you'd change this to the usual /sitemap.xml but it's set this way
          * so as to not conflict with any existing data.
          *
          * Caching is a really good idea. Provide the service name of the cache you want to use
          */
-        
+
         /*
         'sitemaps' => array(
             'cache' => null,
@@ -199,6 +199,10 @@ return array(
     'view_manager' => array(
         'template_path_stack' => array(
             'netglue-prismic' => __DIR__ . '/../view',
+        ),
+        'template_map' => array(
+            'netglue-prismic/sitemap/index'   => __DIR__ . '/../view/netglue-prismic/sitemap/index.phtml',
+            'netglue-prismic/sitemap/sitemap' => __DIR__ . '/../view/netglue-prismic/sitemap/sitemap.phtml',
         ),
     ),
 );
