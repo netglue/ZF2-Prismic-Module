@@ -43,7 +43,7 @@ use Zend\ModuleManager\Feature\FormElementProviderInterface;
  * Bootstrap Listener
  */
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\Mvc\MvcEvent;
+use Zend\EventManager\EventInterface;
 
 /**
  * @codeCoverageIgnore
@@ -62,10 +62,10 @@ class Module implements
     /**
      * Listen to the bootstrap event
      *
-     * @param  MvcEvent $e
+     * @param  EventInterface $e
      * @return array
      */
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(EventInterface $e)
     {
         /**
          * For now, tests die completely due to the view helper manager not being
