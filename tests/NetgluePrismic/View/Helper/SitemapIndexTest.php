@@ -148,6 +148,11 @@ class SitemapIndexTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControl
     public function testExpectedOutput(SitemapIndex $helper)
     {
         $date = date('c');
+        $urls = array(
+            array('/foo', $date),
+            array('/bar', $date),
+        );
+        $helper->setUrls($urls);
         $helper->setFormatOutput(false);
         $helper->addUrl('#foo'); // This url should not appear in output
         $expect = '<?xml version="1.0" encoding="UTF-8"?>
