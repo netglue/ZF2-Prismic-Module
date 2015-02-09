@@ -4,6 +4,7 @@ namespace NetgluePrismic\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 use DOMDocument;
+use NetgluePrismic\Exception;
 
 class SitemapIndex extends AbstractHelper
 {
@@ -58,7 +59,9 @@ class SitemapIndex extends AbstractHelper
             if (is_string($data)) {
                 $this->addUrl($data);
             } elseif (is_array($data)) {
-                $this->addUrl(current($data), end($data));
+                $url = current($data);
+                $lastmod = end($data);
+                $this->addUrl($url, $lastmod);
             }
         }
 
@@ -66,13 +69,35 @@ class SitemapIndex extends AbstractHelper
     }
 
     /**
+     * Return the array of URLs
+     * @return array
+     */
+    public function getUrls()
+    {
+        return $this->urls;
+    }
+
+    /**
      * Add a url with an optional lastmod property
-     * @param  string $url
-     * @param  string $lastmod
+     * @param  string                             $url
+     * @param  string                             $lastmod
      * @return self
+     * @throws Exception\InvalidArgumentException
      */
     public function addUrl($url, $lastmod = null)
     {
+        if (!is_string($url)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects a string for the URL. Received %s',
+                __FUNCTION__,
+                gettype($url)));
+        }
+        if ( (null !== $lastmod) && !is_string($lastmod) ) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s Currently only accepts strings for the lastmod property. Received %s',
+                __FUNCTION__,
+                gettype($lastmod)));
+        }
         $this->urls[] = array(
             'url'     => $url,
             'lastmod' => $lastmod,
@@ -113,7 +138,8 @@ class SitemapIndex extends AbstractHelper
             $index->appendChild($sitemapNode);
             $sitemapNode->appendChild($dom->createElementNS(self::SITEMAP_NS, 'loc', $url));
             if (isset($data['lastmod'])) {
-                // Convert whatever lastmod is to date('c') and add node to $sitemapNode
+                // Currently lastmod is expected to be a valid date time string
+                $sitemapNode->appendChild($dom->createElementNS(self::SITEMAP_NS, 'lastmod', $data['lastmod']));
             }
         }
 
@@ -175,7 +201,7 @@ class SitemapIndex extends AbstractHelper
     /**
      * Sets whether XML output should be formatted
      *
-     * @param  bool    $formatOutput
+     * @param  bool $formatOutput
      * @return self
      */
     public function setFormatOutput($formatOutput = true)
