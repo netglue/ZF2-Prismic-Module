@@ -10,9 +10,7 @@ namespace NetgluePrismic\Mvc\Listener;
 use NetgluePrismic\Exception;
 use NetgluePrismic\ApiAwareInterface;
 use NetgluePrismic\ApiAwareTrait;
-
 use Prismic\Cache\CacheInterface;
-
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\EventManager\EventManagerInterface;

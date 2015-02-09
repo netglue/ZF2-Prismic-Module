@@ -11,7 +11,7 @@ class UrlViewHelperFactory implements FactoryInterface
 
     /**
      * Return Prismic Url Helper
-     * @param  ServiceLocatorInterface $controllerPluginManager
+     * @param  ServiceLocatorInterface $viewPluginManager
      * @return Url
      */
     public function createService(ServiceLocatorInterface $viewPluginManager)

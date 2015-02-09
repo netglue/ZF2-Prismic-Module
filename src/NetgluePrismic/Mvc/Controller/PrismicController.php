@@ -3,11 +3,8 @@
 namespace NetgluePrismic\Mvc\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
-
 use NetgluePrismic\Exception;
-
 use Zend\Session\Container;
-
 use Zend\Http\Client as HttpClient;
 
 class PrismicController extends AbstractActionController

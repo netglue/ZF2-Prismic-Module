@@ -9,10 +9,8 @@ namespace NetgluePrismic\Mvc\Listener;
 
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\EventManager\EventInterface;
-
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\RendererInterface;
-
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ToolbarListener

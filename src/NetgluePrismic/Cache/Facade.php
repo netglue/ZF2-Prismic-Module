@@ -3,11 +3,9 @@
 namespace NetgluePrismic\Cache;
 
 use Prismic\Cache\CacheInterface;
-
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Cache\Storage\FlushableInterface;
 use Zend\Cache\Storage\Adapter\Memcached;
-
 
 class Facade implements CacheInterface
 {
@@ -19,7 +17,7 @@ class Facade implements CacheInterface
     private $storage;
 
     /**
-     * @param StorageInterface $storage
+     * @param  StorageInterface $storage
      * @return void
      */
     public function __construct(StorageInterface $storage)
@@ -29,33 +27,35 @@ class Facade implements CacheInterface
 
     /**
      * Whether the given key exists in the cache
-     * @param string $key
+     * @param  string $key
      * @return bool
      */
     public function has($key)
     {
         $normalizedKey = $this->normalizeKey($key);
+
         return $this->storage->hasItem($normalizedKey);
     }
 
     /**
      * Returns the value of a cache entry from its key
      *
-     * @param  string    $key the key of the cache entry
-     * @return mixed the value of the entry
+     * @param  string $key the key of the cache entry
+     * @return mixed  the value of the entry
      */
     public function get($key)
     {
         $normalizedKey = $this->normalizeKey($key);
+
         return $this->storage->getItem($normalizedKey);
     }
 
     /**
      * Stores a new cache entry
      *
-     * @param string    $key   the key of the cache entry
-     * @param mixed     $value the value of the entry
-     * @param integer   $ttl   the time until this cache entry expires
+     * @param  string  $key   the key of the cache entry
+     * @param  mixed   $value the value of the entry
+     * @param  integer $ttl   the time until this cache entry expires
      * @return void
      */
     public function set($key, $value, $ttl = 0)
@@ -74,7 +74,7 @@ class Facade implements CacheInterface
     /**
      * Deletes a cache entry, from its key
      *
-     * @param string $key the key of the cache entry
+     * @param  string $key the key of the cache entry
      * @return void
      */
     public function delete($key)
@@ -89,7 +89,7 @@ class Facade implements CacheInterface
      */
     public function clear()
     {
-        if($this->storage instanceof FlushableInterface) {
+        if ($this->storage instanceof FlushableInterface) {
             $this->storage->flush();
         }
     }
@@ -112,7 +112,7 @@ class Facade implements CacheInterface
      * The method is public so that client code can discover what the normalized key might be
      * if there was a need.
      *
-     * @param string $key The unmodified cache key to use
+     * @param  string $key The unmodified cache key to use
      * @return string the possibly modified cache key
      */
     public function normalizeKey($key)

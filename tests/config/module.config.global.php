@@ -20,6 +20,38 @@ return array(
                 'ogDescription' => 'meta_description',
             ),
         ),
+
+        'sitemaps' => array(
+            'cache' => null,
+            'sitemaps' => array(
+                'test' => array(
+                    'name' => 'test',
+                    'propertyMap' => array(
+                        'priority' => 'priority',
+                        'changefreq' => 'change_freq',
+                    ),
+                    'documentTypes' => array(
+                        'article',
+                    ),
+                ),
+                'no-results' => array(
+                    'name' => 'no-results',
+                    'propertyMap' => array(
+                        'priority' => 'priority',
+                        'changefreq' => 'change_freq',
+                    ),
+                    'documentTypes' => array(
+                        'there-are-no-docs-like-this',
+                    ),
+                ),
+                'no-property-map' => array(
+                    'name' => 'no-property-map',
+                    'documentTypes' => array(
+                        'whatever',
+                    ),
+                ),
+            ),
+        ),
     ),
 
     'view_manager' => array(

@@ -12,7 +12,6 @@ use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventInterface;
-
 use Zend\View\HelperPluginManager;
 
 class ViewHelperDocumentListener implements ListenerAggregateInterface

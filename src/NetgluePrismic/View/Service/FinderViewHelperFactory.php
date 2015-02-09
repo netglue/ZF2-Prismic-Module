@@ -11,7 +11,7 @@ class FinderViewHelperFactory implements FactoryInterface
 
     /**
      * Return Prismic Finder Helper
-     * @param  ServiceLocatorInterface $controllerPluginManager
+     * @param  ServiceLocatorInterface $viewPluginManager
      * @return Finder
      */
     public function createService(ServiceLocatorInterface $viewPluginManager)

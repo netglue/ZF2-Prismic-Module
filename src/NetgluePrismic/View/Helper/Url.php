@@ -3,11 +3,9 @@
 namespace NetgluePrismic\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-
 use Prismic\Fragment\Link\LinkInterface;
 use NetgluePrismic\Mvc\LinkResolver;
 use NetgluePrismic\Mvc\LinkGenerator;
-
 
 class Url extends AbstractHelper
 {
@@ -29,8 +27,8 @@ class Url extends AbstractHelper
 
     /**
      * Depends on a link resolver
-     * @param LinkResolver  $resolver
-     * @param LinkGenerator $generator
+     * @param  LinkResolver  $resolver
+     * @param  LinkGenerator $generator
      * @return void
      */
     public function __construct(LinkResolver $resolver, LinkGenerator $generator)
@@ -44,7 +42,7 @@ class Url extends AbstractHelper
      */
     public function __invoke($target = null)
     {
-        if(!is_null($target)) {
+        if (!is_null($target)) {
             $this->setTarget($target);
         }
 
@@ -77,7 +75,7 @@ class Url extends AbstractHelper
      */
     public function __toString()
     {
-        if(!$this->target instanceof LinkInterface) {
+        if (!$this->target instanceof LinkInterface) {
             return '';
         }
 
