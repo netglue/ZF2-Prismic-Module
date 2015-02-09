@@ -116,6 +116,15 @@ class Sitemap implements ContextAwareInterface,
     }
 
     /**
+     * Reset the containers so that tey are built again
+     * @return void
+     */
+    public function resetContainers()
+    {
+        $this->containers = array();
+    }
+
+    /**
      * Return the configuration of the nav container with the given name
      * @param  string     $name The container name
      * @return array|null An array of configuation or null if the container config cannot be found
@@ -133,6 +142,16 @@ class Sitemap implements ContextAwareInterface,
     }
 
     /**
+     * Return the cache key for the given container name
+     * @param  string $name
+     * @return string
+     */
+    public function getCacheKeyForContainerName($name)
+    {
+        return sprintf('NetgluePrismicSitemapContainer-%s', $name);
+    }
+
+    /**
      * Return a Zend Navigation Container suitable for use by Sitemap View Helpers
      * @param  string         $name The name of the configured container
      * @return Container|null
@@ -145,7 +164,7 @@ class Sitemap implements ContextAwareInterface,
         if (array_key_exists($name, $this->containers)) {
             return $this->containers[$name];
         }
-        $cacheKey = sprintf('NetgluePrismicSitemapContainer-%s', $name);
+        $cacheKey = $this->getCacheKeyForContainerName($name);
         if ($this->cache && $this->cache->hasItem($cacheKey)) {
             $success = false;
             $container = $this->cache->getItem($cacheKey, $success);
