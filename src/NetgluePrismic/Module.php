@@ -43,7 +43,7 @@ use Zend\ModuleManager\Feature\FormElementProviderInterface;
  * Bootstrap Listener
  */
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\EventManager\EventInterface;
+use Zend\Mvc\MvcEvent;
 
 /**
  * @codeCoverageIgnore
@@ -62,10 +62,10 @@ class Module implements
     /**
      * Listen to the bootstrap event
      *
-     * @param  EventInterface $e
+     * @param  MvcEvent $e
      * @return array
      */
-    public function onBootstrap(EventInterface $e)
+    public function onBootstrap(MvcEvent $e)
     {
         /**
          * For now, tests die completely due to the view helper manager not being
@@ -84,7 +84,7 @@ class Module implements
          * If the document is located before the session is initialised,
          * we'll always end up looking at the master ref.
          */
-        $session = $services->get('NetgluePrismic\Session\PrismicContainer');
+        $services->get('NetgluePrismic\Session\PrismicContainer');
 
         // Cache Buster that's triggered when we receive a valid webhook payload from the Prismic API
         $listener = $services->get('NetgluePrismic\Mvc\Listener\CacheBusterListener');
@@ -250,6 +250,7 @@ class Module implements
                     $services = $manager->getServiceLocator();
                     $context = $services->get('Prismic\Context');
                     $api = $context->getPrismicApi();
+                    $options = array();
                     foreach ($api->refs() as $ref) {
                         if ($ref->isMasterRef()) {
                             $options[$ref->getRef()] = 'Current Live Website';
