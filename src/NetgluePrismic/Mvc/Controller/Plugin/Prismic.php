@@ -17,7 +17,6 @@ use NetgluePrismic\ContextAwareTrait;
 
 use Prismic\Api;
 use Prismic\Document;
-use Prismic\Fragment\Link\DocumentLink;
 use NetgluePrismic\Exception;
 use NetgluePrismic\Mvc\Router\RouterOptions;
 use NetgluePrismic\Mvc\LinkGenerator;
@@ -181,6 +180,7 @@ class Prismic extends AbstractPlugin implements
     public function getRouteParamsForDocument(Document $document)
     {
         $link = $this->getLinkGenerator()->generate($document);
+
         return $this->getLinkResolver()->getRouteParams($link);
     }
 

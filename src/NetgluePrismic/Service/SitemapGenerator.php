@@ -8,14 +8,13 @@ use NetgluePrismic\ApiAwareInterface;
 use NetgluePrismic\ApiAwareTrait;
 use NetgluePrismic\Mvc\LinkResolver;
 use NetgluePrismic\Mvc\LinkGenerator;
+use NetgluePrismic\Exception;
 
 use Prismic\Document;
-use Prismic\SearchForm;
 use Prismic\Predicates;
 use Prismic\Response;
 
 use Zend\Navigation\Navigation as Container;
-
 
 class SitemapGenerator implements ContextAwareInterface,
                                ApiAwareInterface
@@ -28,11 +27,6 @@ class SitemapGenerator implements ContextAwareInterface,
      * @var Container
      */
     protected $container;
-
-    /**
-     * @var string A name for this collection of URLs/Pages
-     */
-    protected $name;
 
     /**
      * @var array An array of Prismic document types - This is how we'll find all the correct documents
@@ -62,14 +56,27 @@ class SitemapGenerator implements ContextAwareInterface,
         'changefreq' => null,
         'lastmod'    => null,
     );
-    
+
+    /**
+     * Set the array that maps sitemap properties to Prismic document fragments
+     * @param  array $map
+     * @return void
+     */
     public function setPropertyMap(array $map)
     {
+        foreach ($map as $prop => $frag) {
+            if (!is_string($prop)) {
+                throw new Exception\InvalidArgumentException('Encountered property map key that was not a string');
+            }
+            if (!is_string($frag)) {
+                throw new Exception\InvalidArgumentException('Encountered fragment identifier that was not a string');
+            }
+        }
         $this->propertyMap = $map;
     }
-    
+
     /**
-     * @param LinkResolver  $resolver
+     * @param  LinkResolver $resolver
      * @return void
      */
     public function setLinkResolver(LinkResolver $resolver)
@@ -78,7 +85,7 @@ class SitemapGenerator implements ContextAwareInterface,
     }
 
     /**
-     * @param LinkGenerator $generator
+     * @param  LinkGenerator $generator
      * @return void
      */
     public function setLinkGenerator(LinkGenerator $generator)
@@ -86,14 +93,9 @@ class SitemapGenerator implements ContextAwareInterface,
         $this->linkGenerator = $generator;
     }
 
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
     /**
      * Sets the document types to search for in the Prismic Api
-     * @param array $types
+     * @param  array $types
      * @return void
      */
     public function setDocumentTypes(array $types)
@@ -115,10 +117,9 @@ class SitemapGenerator implements ContextAwareInterface,
         return $this->container;
     }
 
-
     /**
      * Return the prismic response containing the documents in the given page
-     * @param int $page
+     * @param  int      $page
      * @return Response
      */
     protected function retrieveDocumentsByPage($page)
@@ -133,6 +134,7 @@ class SitemapGenerator implements ContextAwareInterface,
                 ->pageSize($this->pageSize)
                 ->page($page)
                 ->query($predicates);
+
         return $form->submit();
     }
 
@@ -140,21 +142,22 @@ class SitemapGenerator implements ContextAwareInterface,
      * Return *all* documents of the configured types
      * @return array An array of Document instances
      */
-    public function retrieveDocuments()
+    protected function retrieveDocuments()
     {
         $response = $this->retrieveDocumentsByPage(1);
         $documents = $response->getResults();
-        while($response->getPage() < $response->getTotalPages()) {
+        while ($response->getPage() < $response->getTotalPages()) {
             $page = $response->getPage() + 1;
             $response = $this->retrieveDocumentsByPage($page);
             $documents = array_merge($documents, $response->getResults());
         }
+
         return $documents;
     }
 
     /**
      * Given a Prismic document, return an array suitable for generating a sitemap entry or null
-     * @param Document $document
+     * @param  Document   $document
      * @return array|null
      */
     protected function documentToArray(Document $document)
@@ -173,16 +176,17 @@ class SitemapGenerator implements ContextAwareInterface,
 
         $data['uri'] = $url;
 
-        foreach($this->propertyMap as $property => $fragment) {
+        foreach ($this->propertyMap as $property => $fragment) {
             if (empty($fragment)) {
                 continue;
             }
             $fragment = sprintf('%s.%s', $type, $fragment);
             $frag = $document->get($fragment);
-            if($frag) {
+            if ($frag) {
                 $data[$property] = $frag->asText();
             }
         }
+
         return $data;
     }
 
@@ -194,9 +198,9 @@ class SitemapGenerator implements ContextAwareInterface,
     {
         $docs = $this->retrieveDocuments();
         $pages = array();
-        foreach($docs as $doc) {
+        foreach ($docs as $doc) {
             $page = $this->documentToArray($doc);
-            if(null !== $page) {
+            if (null !== $page) {
                 $pages[] = $page;
             }
         }

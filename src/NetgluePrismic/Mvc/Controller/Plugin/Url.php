@@ -10,7 +10,6 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use NetgluePrismic\Mvc\LinkResolver;
 use NetgluePrismic\Mvc\LinkGenerator;
 
-
 class Url extends AbstractPlugin
 {
 
@@ -26,8 +25,8 @@ class Url extends AbstractPlugin
 
     /**
      * Depends on a link resolver
-     * @param LinkResolver  $resolver
-     * @param LinkGenerator $generator
+     * @param  LinkResolver  $resolver
+     * @param  LinkGenerator $generator
      * @return void
      */
     public function __construct(LinkResolver $resolver, LinkGenerator $generator)
@@ -38,12 +37,12 @@ class Url extends AbstractPlugin
 
     /**
      * Invoke. Returns sel with no argument or the string url for the given target
-     * @param \Prismic\Document|string $target If non-null, hould be a document or an id
-     * @return string|self Returns self when no argument is provided or the string url of the argument
+     * @param  \Prismic\Document|string $target If non-null, hould be a document or an id
+     * @return string|self              Returns self when no argument is provided or the string url of the argument
      */
     public function __invoke($target = null)
     {
-        if(!is_null($target)) {
+        if (!is_null($target)) {
             return $this->url($target);
         }
 
@@ -52,7 +51,7 @@ class Url extends AbstractPlugin
 
     /**
      * Given a document or document id, return the url for it as a string
-     * @param mixed $target
+     * @param  mixed  $target
      * @return string
      */
     public function url($target)
