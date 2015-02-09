@@ -224,6 +224,7 @@ class PrismicController extends AbstractActionController
             try {
                 $uri = new \Zend\Uri\Uri($url);
             } catch (\Exception $e) {
+                // Not caught because $uri is tested below:
             }
         }
         if (!isset($uri) || !isset($ref)) {
