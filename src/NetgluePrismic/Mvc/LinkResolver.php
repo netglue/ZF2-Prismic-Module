@@ -3,16 +3,12 @@
 namespace NetgluePrismic\Mvc;
 
 use Prismic\LinkResolver as PrismicResolver;
-
 use Zend\Mvc\Router\RouteStackInterface;
 use NetgluePrismic\Mvc\Router\RouterOptions;
-
 use NetgluePrismic\ContextAwareTrait;
 use NetgluePrismic\ContextAwareInterface;
-
 use Prismic\Fragment\Link\LinkInterface;
 use Prismic\Fragment\Link\DocumentLink;
-
 use NetgluePrismic\Exception;
 
 class LinkResolver extends PrismicResolver implements ContextAwareInterface
@@ -275,7 +271,7 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
 
     /**
      * Return the application's router
-     * @return RouteStackInterface|NULL
+     * @return RouteStackInterface
      */
     public function getRouter()
     {

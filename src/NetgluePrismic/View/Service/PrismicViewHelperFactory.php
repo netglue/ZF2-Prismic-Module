@@ -11,7 +11,7 @@ class PrismicViewHelperFactory implements FactoryInterface
 
     /**
      * Return Prismic (Document) view helper
-     * @param  ServiceLocatorInterface $controllerPluginManager
+     * @param  ServiceLocatorInterface $viewPluginManager
      * @return Helper
      */
     public function createService(ServiceLocatorInterface $viewPluginManager)

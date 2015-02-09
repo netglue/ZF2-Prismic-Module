@@ -7,7 +7,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Prismic\Api;
 use Zend\Session\Container;
 use Ivory\HttpAdapter\HttpAdapterException;
-
 use Prismic\Cache\CacheInterface;
 use NetgluePrismic\Cache\Facade;
 

@@ -10,7 +10,6 @@ use Prismic\Fragment\Link\LinkInterface;
 use Prismic\Fragment\Link\DocumentLink;
 use Prismic\Document;
 use NetgluePrismic\Exception;
-
 use NetgluePrismic\ContextAwareInterface;
 use NetgluePrismic\ContextAwareTrait;
 use NetgluePrismic\Context;

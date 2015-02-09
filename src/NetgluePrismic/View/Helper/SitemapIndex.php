@@ -176,7 +176,7 @@ class SitemapIndex extends AbstractHelper
      * Sets whether XML output should be formatted
      *
      * @param  bool    $formatOutput
-     * @return Sitemap
+     * @return self
      */
     public function setFormatOutput($formatOutput = true)
     {

@@ -6,21 +6,17 @@
 namespace NetgluePrismic\Mvc\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
-
 use NetgluePrismic\ApiAwareInterface;
 use NetgluePrismic\ApiAwareTrait;
 use NetgluePrismic\ContextAwareInterface;
 use NetgluePrismic\ContextAwareTrait;
-
 use Prismic\Api;
 use Prismic\Document;
 use NetgluePrismic\Exception;
 use NetgluePrismic\Mvc\Router\RouterOptions;
 use NetgluePrismic\Mvc\LinkGenerator;
-
 use NetgluePrismic\View\Model\DocumentViewModel;
 use Prismic\LinkResolver;
 
@@ -186,7 +182,7 @@ class Prismic extends AbstractPlugin implements
 
     /**
      * Return the document bookmarked in the route for the current request
-     * @return \Prismic\Document|NULL
+     * @return Document|null
      */
     public function getBookmarkedDocumentFromRequest()
     {

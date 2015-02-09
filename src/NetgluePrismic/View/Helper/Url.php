@@ -3,7 +3,6 @@
 namespace NetgluePrismic\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
-
 use Prismic\Fragment\Link\LinkInterface;
 use NetgluePrismic\Mvc\LinkResolver;
 use NetgluePrismic\Mvc\LinkGenerator;

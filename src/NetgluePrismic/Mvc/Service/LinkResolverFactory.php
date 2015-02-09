@@ -12,7 +12,7 @@ class LinkResolverFactory implements FactoryInterface
     /**
      * Return Prismic routing options instance
      * @param  ServiceLocatorInterface $serviceLocator
-     * @return RouterOptions
+     * @return LinkResolver
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

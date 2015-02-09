@@ -1,9 +1,9 @@
 <?php
 namespace NetgluePrismic\Mvc\Controller;
+
 use NetgluePrismic\Service\Sitemap;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Application;
 

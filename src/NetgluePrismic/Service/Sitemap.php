@@ -8,11 +8,7 @@ use NetgluePrismic\ApiAwareInterface;
 use NetgluePrismic\ApiAwareTrait;
 use NetgluePrismic\Mvc\LinkResolver;
 use NetgluePrismic\Mvc\LinkGenerator;
-
 use NetgluePrismic\Exception;
-
-use Prismic\Document;
-
 use Zend\Navigation\Navigation as Container;
 use Zend\Cache\Storage\StorageInterface as Cache;
 

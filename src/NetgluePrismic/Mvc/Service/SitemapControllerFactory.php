@@ -11,7 +11,7 @@ class SitemapControllerFactory implements FactoryInterface
 
     /**
      * Return SitemapController
-     * @param  ServiceLocatorInterface $controllerPluginManager
+     * @param  ServiceLocatorInterface $controllerManager
      * @return SitemapController
      */
     public function createService(ServiceLocatorInterface $controllerManager)

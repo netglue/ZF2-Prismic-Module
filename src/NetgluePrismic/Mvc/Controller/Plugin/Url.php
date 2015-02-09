@@ -6,7 +6,6 @@
 namespace NetgluePrismic\Mvc\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-
 use NetgluePrismic\Mvc\LinkResolver;
 use NetgluePrismic\Mvc\LinkGenerator;
 
