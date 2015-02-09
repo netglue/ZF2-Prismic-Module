@@ -23,7 +23,6 @@ class LinkGenerator implements ContextAwareInterface
     /**
      * Depends on a context instance
      * @param Context $context
-     * @return void
      */
     public function __construct(Context $context)
     {

@@ -18,7 +18,6 @@ class Facade implements CacheInterface
 
     /**
      * @param  StorageInterface $storage
-     * @return void
      */
     public function __construct(StorageInterface $storage)
     {

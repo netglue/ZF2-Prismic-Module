@@ -16,7 +16,6 @@ class Finder extends AbstractHelper implements ContextAwareInterface
     /**
      * Requires a context instance
      * @param  Context $context
-     * @return void
      */
     public function __construct(Context $context)
     {

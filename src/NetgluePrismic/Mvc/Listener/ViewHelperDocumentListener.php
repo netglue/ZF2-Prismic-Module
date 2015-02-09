@@ -27,7 +27,6 @@ class ViewHelperDocumentListener implements ListenerAggregateInterface
     /**
      * Construct the listener. Requires the view helper plugin manager
      * @param  HelperPluginManager $helperManager
-     * @return void
      */
     public function __construct(HelperPluginManager $helperManager)
     {

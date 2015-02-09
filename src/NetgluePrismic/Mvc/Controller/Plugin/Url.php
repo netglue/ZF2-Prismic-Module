@@ -26,7 +26,6 @@ class Url extends AbstractPlugin
      * Depends on a link resolver
      * @param  LinkResolver  $resolver
      * @param  LinkGenerator $generator
-     * @return void
      */
     public function __construct(LinkResolver $resolver, LinkGenerator $generator)
     {
