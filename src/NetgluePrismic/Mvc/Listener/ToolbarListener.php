@@ -8,7 +8,7 @@
 namespace NetgluePrismic\Mvc\Listener;
 
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\EventManager\EventInterface;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\RendererInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -71,21 +71,25 @@ class ToolbarListener
     /**
      * Callback that does the work of injecting the toolbar into the response
      *
-     * @param  EventInterface $event
+     * @param  MvcEvent $event
      * @return void
      */
-    public function injectToolbar(EventInterface $event)
+    public function injectToolbar(MvcEvent $event)
     {
         if (!$this->shouldRender()) {
             return;
         }
         $formManager = $this->serviceLocator->get('FormElementManager');
         $select = $formManager->get('NetgluePrismic\Form\Element\SelectPrismicRef');
-
+        $request     = $event->getApplication()->getRequest();
+        $url         = (string) $request->getUri();
         $response    = $event->getApplication()->getResponse();
-        $toolbarView = new ViewModel;
+
+        $toolbarView            = new ViewModel;
         $toolbarView->selectRef = $select;
+        $toolbarView->url       = $url;
         $toolbarView->setTemplate('netglue-prismic/toolbar/toolbar');
+
         $toolbar     = $this->renderer->render($toolbarView);
 
         $toolbarCss  = new ViewModel;

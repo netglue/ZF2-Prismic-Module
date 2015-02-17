@@ -15,8 +15,12 @@ class ContainerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $container = new PrismicContainer('Prismic');
-        $container->setContext($serviceLocator->get('Prismic\Context'));
+        $context = $serviceLocator->get('NetgluePrismic\Context');
+        $container->setContext($context);
 
+        if($container->hasAccessToken()) {
+            $context->setPrivilegedAccess(true);
+        }
         return $container;
     }
 
