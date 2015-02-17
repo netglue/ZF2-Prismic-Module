@@ -45,7 +45,7 @@ class CacheBusterListener implements ListenerAggregateInterface, ApiAwareInterfa
 
     /**
      * Callback on receive webhook
-     * @param EventInterface $event
+     * @param  EventInterface $event
      * @return void
      */
     public function onWebhookReceive(EventInterface $event)
@@ -64,7 +64,7 @@ class CacheBusterListener implements ListenerAggregateInterface, ApiAwareInterfa
 
         $this->lastPayload = $event->getParams();
 
-        if('api-update' === $type) {
+        if ('api-update' === $type) {
             $this->clearCache();
         }
     }
@@ -76,11 +76,11 @@ class CacheBusterListener implements ListenerAggregateInterface, ApiAwareInterfa
     public function clearCache()
     {
         $api = $this->getPrismicApi();
-        if(!$api) {
+        if (!$api) {
             throw new Exception\RuntimeException('Prismic API has not been injected');
         }
         $cache = $api->getCache();
-        if($cache instanceof CacheInterface) {
+        if ($cache instanceof CacheInterface) {
             $cache->clear();
         }
     }

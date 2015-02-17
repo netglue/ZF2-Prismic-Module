@@ -8,7 +8,7 @@
 namespace NetgluePrismic\Mvc\Listener;
 
 use Zend\EventManager\ListenerAggregateTrait;
-use Zend\EventManager\EventInterface;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\RendererInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -71,10 +71,10 @@ class ToolbarListener
     /**
      * Callback that does the work of injecting the toolbar into the response
      *
-     * @param  EventInterface $event
+     * @param  MvcEvent $event
      * @return void
      */
-    public function injectToolbar(EventInterface $event)
+    public function injectToolbar(MvcEvent $event)
     {
         if (!$this->shouldRender()) {
             return;
