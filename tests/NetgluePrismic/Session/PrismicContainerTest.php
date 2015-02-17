@@ -24,7 +24,7 @@ class PrismicContainerTest extends \PHPUnit_Framework_TestCase
         self::$manager = $sessionManager;
 
         $services = bootstrap::getServiceManager();
-        $this->context = $services->get('Prismic\Context');
+        $this->context = $services->get('NetgluePrismic\Context');
     }
 
     public function tearDown()
@@ -49,46 +49,12 @@ class PrismicContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('NetgluePrismic\Context', $container->getContext());
     }
 
-    public function testSessionHasMasterRefByDefaultWhenContextIsSet()
+    public function testSetGetRef()
     {
-        $container = new PrismicContainer('Prismic');
-        $this->assertNull($container->ref);
-
-        $container->setContext($this->context);
-        $this->assertSame($this->context->getMasterRef()->getRef(), $container->ref);
-    }
-
-    public function testSetContextResetsRefToMasterForInvalidRef()
-    {
-        $container = new PrismicContainer('Prismic');
-        $container->ref = 'Not a valid Ref';
-        $this->assertEquals('Not a valid Ref', $container->ref);
-        $container->setContext($this->context);
-        $this->assertSame($this->context->getMasterRef()->getRef(), $container->ref);
-    }
-
-    public function testSetContextSetsContextRefWhenSessionRefIsValid()
-    {
-        $allRefs = $this->context->getPrismicApi()->refs();
-        $notMaster = array_filter($allRefs, function ($value) {
-            return !($value->isMasterRef());
-        });
-        if (!count($notMaster)) {
-            $this->fail('There are no unpublised releases available in the prismic repository');
-        }
-        $notMaster = current($notMaster)->getRef();
-
-        $container = new PrismicContainer('Prismic');
-        $container->ref = $notMaster;
-
-        $contextRef = $this->context->getRef();
-
-        $this->assertNotEquals($container->ref, (string) $contextRef);
-        $container->setContext($this->context);
-
-        $this->assertSame($notMaster, $container->ref);
-        $this->assertSame($container->ref, (string) $this->context->getRef());
-        $this->assertNotSame($contextRef, (string) $this->context->getRef());
+        $container = $this->getContainer();
+        $this->assertNull($container->getRef());
+        $container->setRef('foo');
+        $this->assertSame('foo', $container->getRef());
     }
 
     public function testSetGetHasAccessToken()

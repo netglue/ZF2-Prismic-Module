@@ -80,7 +80,7 @@ class ToolbarListener
             return;
         }
         $formManager = $this->serviceLocator->get('FormElementManager');
-        $select = $formManager->get('NetgluePrismic\Form\Element\SelectPrismicRef');
+        $select      = $formManager->get('NetgluePrismic\Form\Element\SelectPrismicRef');
         $request     = $event->getApplication()->getRequest();
         $url         = (string) $request->getUri();
         $response    = $event->getApplication()->getResponse();

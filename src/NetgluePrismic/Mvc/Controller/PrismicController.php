@@ -6,6 +6,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use NetgluePrismic\Exception;
 use Zend\Session\Container;
 use Zend\Http\Client as HttpClient;
+use Zend\Http\Header\SetCookie;
+use Zend\Http\Response as HttpResponse;
+use Zend\Mvc\Application;
 
 class PrismicController extends AbstractActionController
 {
@@ -132,6 +135,47 @@ class PrismicController extends AbstractActionController
     }
 
     /**
+     * Sets a cookie for previewing draft documents
+     * @return void
+     */
+    public function previewAction()
+    {
+        $token = $this->params()->fromQuery('token');
+        if (empty($token)) {
+            $this->getResponse()->setReasonPhrase('Bad Request');
+            $this->raise404();
+
+            return;
+        }
+
+        $api = $this->prismic()->api();
+
+        $url = $api->previewSession($token, $this->prismic()->getLinkResolver(), '/');
+
+        $expires = time() + (29 * 60);
+        $cookie = new SetCookie(\Prismic\PREVIEW_COOKIE, $token, $expires);
+        $headers = $this->getResponse()->getHeaders();
+        $headers->addHeader($cookie);
+
+        //$this->getSessionContainer()->ref = (string) $token;
+
+        return $this->redirect()->toUrl($url);
+    }
+
+    /**
+     * Set the response to a 404 error
+     */
+    protected function raise404()
+    {
+        $e = $this->getEvent();
+        $e->setError(Application::ERROR_CONTROLLER_CANNOT_DISPATCH);
+        $response = $e->getResponse();
+        if ($response instanceof HttpResponse) {
+            $response->setStatusCode(404);
+        }
+    }
+
+    /**
      * Return an existing client or create a new one
      * @return HttpClient
      */
@@ -223,25 +267,27 @@ class PrismicController extends AbstractActionController
         if (!empty($url)) {
             try {
                 $uri = new \Zend\Uri\Uri($url);
+                $redirect = (string) $uri;
             } catch (\Exception $e) {
                 // Not caught because $uri is tested below:
             }
         }
-        if (!isset($uri) || !isset($ref)) {
-            return $this->getResponse()->setStatusCode(400);
+        if (!isset($redirect) || !isset($ref)) {
+            $this->raise404();
+            return;
         }
-        $redirect = (string) $uri;
 
         // Make sure ref is valid
         $ref = $this->getContext()->getRefWithString($ref);
         if (!is_object($ref)) {
-            return $this->getResponse()->setStatusCode(404);
+            $this->raise404();
+            return;
         }
 
         // Store the ref in the session
-        $this->getSessionContainer()->ref = (string) $ref;
-        $this->getContext()->getPrismicApi()->getCache()->clear();
+        $this->getSessionContainer()->setRef($ref);
 
+        // Redirect to the determined url
         return $this->redirect()->toUrl($redirect);
     }
 

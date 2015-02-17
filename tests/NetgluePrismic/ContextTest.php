@@ -14,7 +14,7 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $cache = new \Prismic\Cache\ApcCache();
         $cache->clear();
         $sl = bootstrap::getServiceManager();
-        $this->context = $sl->get('Prismic\Context');
+        $this->context = $sl->get('NetgluePrismic\Context');
 
     }
 
@@ -38,6 +38,29 @@ class ContextTest extends \PHPUnit_Framework_TestCase
         $context = new Context;
         $context->setRef($ref);
         $this->assertSame($ref, $context->getRef());
+    }
+
+    public function testGetRefAsStringReturnsMasterRefByDefault()
+    {
+        $master = $this->context->getMasterRef();
+        $this->assertSame($master->getRef(), $this->context->getRefAsString());
+    }
+
+    public function testSettingStringRefOverridesRefObjectWhenSet()
+    {
+        $master = $this->context->getMasterRef();
+        $refObject = $this->context->getRef();
+        $this->assertSame($master, $refObject);
+
+        $this->context->setRefWithString('foo');
+        $this->assertSame('foo', $this->context->getRefAsString());
+    }
+
+    public function testSettingStringRefCanBeNull()
+    {
+        $master = $this->context->getMasterRef();
+        $this->context->setRefWithString(null);
+        $this->assertSame($master->getRef(), $this->context->getRefAsString());
     }
 
     public function testSetGetPrivilegedAccess()
