@@ -5,7 +5,7 @@ namespace NetgluePrismic\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Prismic\Api;
-use Zend\Session\Container;
+use NetgluePrismic\Session\PrismicContainer;
 use Ivory\HttpAdapter\HttpAdapterException;
 use Prismic\Cache\CacheInterface;
 use NetgluePrismic\Cache\Facade;
@@ -34,10 +34,12 @@ class PrismicApiClientFactory implements FactoryInterface
 
         /**
          * Check the Session for a token and prefer that if it exists.
+         * We cannot retrieve the Prismic Container from the service manager
+         * because it depends on the Context, so we'd have a circular dependency
          */
-        $session = new Container('Prismic');
-        if (isset($session->access_token)) {
-            $token = $session->access_token;
+        $session = new PrismicContainer('Prismic');
+        if ($session->hasAccessToken()) {
+            $token = $session->getAccessToken();
         }
 
         /**
