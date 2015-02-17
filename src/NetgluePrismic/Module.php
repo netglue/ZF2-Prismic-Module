@@ -161,9 +161,7 @@ class Module implements
                 // Injects the routed document into the view helper
                 'NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener' => 'NetgluePrismic\Mvc\Service\ViewHelperDocumentListenerFactory',
                 // Listener to inject the toolbar
-                'NetgluePrismic\MvcListener\ToolbarListener' => function($sm) {
-                    return new \NetgluePrismic\Mvc\Listener\ToolbarListener($sm->get('ViewRenderer'), $sm);
-                }
+                'NetgluePrismic\Mvc\Listener\ToolbarListener' => 'NetgluePrismic\Mvc\Service\ToolbarListenerFactory',
             ),
             'invokables' => array(
                 'NetgluePrismic\Mvc\Listener\CacheBusterListener' => 'NetgluePrismic\Mvc\Listener\CacheBusterListener',
