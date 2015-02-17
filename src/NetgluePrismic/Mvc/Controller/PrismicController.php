@@ -125,7 +125,7 @@ class PrismicController extends AbstractActionController
         $expires -= 60;
 
         $session = $this->getSessionContainer();
-        $session->access_token = $accessToken;
+        $session->setAccessToken($accessToken);
         $session->setExpirationSeconds($expires, 'access_token');
 
         return $this->redirect()->toUrl('/');
