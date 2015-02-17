@@ -91,4 +91,14 @@ class PrismicContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($contextRef, (string) $this->context->getRef());
     }
 
+    public function testSetGetHasAccessToken()
+    {
+        $session = new PrismicContainer('Test');
+        $this->assertFalse($session->hasAccessToken());
+        $this->assertNull($session->getAccessToken());
+        $session->setAccessToken('foo');
+        $this->assertTrue($session->hasAccessToken());
+        $this->assertSame('foo', $session->getAccessToken());
+    }
+
 }

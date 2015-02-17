@@ -44,4 +44,33 @@ class PrismicContainer extends Container implements ContextAwareInterface
         }
     }
 
+    /**
+     * Set Access Token for previewing releases
+     * @param string $token
+     * @return void
+     */
+    public function setAccessToken($token)
+    {
+        $this->access_token = $token;
+    }
+
+    /**
+     * Return the access token for previewing releases
+     * @return string|null
+     */
+    public function getAccessToken()
+    {
+        return $this->access_token;
+    }
+
+    /**
+     * Whether an access token has been set
+     * @return bool
+     */
+    public function hasAccessToken()
+    {
+        return isset($this->access_token) && !empty($this->access_token);
+    }
+
+
 }
