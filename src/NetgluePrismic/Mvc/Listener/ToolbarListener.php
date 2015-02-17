@@ -81,11 +81,15 @@ class ToolbarListener
         }
         $formManager = $this->serviceLocator->get('FormElementManager');
         $select = $formManager->get('NetgluePrismic\Form\Element\SelectPrismicRef');
-
+        $request     = $event->getApplication()->getRequest();
+        $url         = (string) $request->getUri();
         $response    = $event->getApplication()->getResponse();
-        $toolbarView = new ViewModel;
+
+        $toolbarView            = new ViewModel;
         $toolbarView->selectRef = $select;
+        $toolbarView->url       = $url;
         $toolbarView->setTemplate('netglue-prismic/toolbar/toolbar');
+
         $toolbar     = $this->renderer->render($toolbarView);
 
         $toolbarCss  = new ViewModel;

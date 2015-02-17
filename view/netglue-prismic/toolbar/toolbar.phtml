@@ -6,7 +6,7 @@
         $this->selectRef->setAttribute('class', '');
         echo $this->formSelect($this->selectRef);
         ?>
-        <input type="hidden" name="url" value="<?php echo $this->escapeHtmlAttr($this->serverUrl()); ?>">
+        <input type="hidden" name="url" value="<?php echo $this->escapeHtmlAttr($this->url); ?>">
         <button type="submit" name="change-ref" value="1">Change</button></p>
     </form>
 
