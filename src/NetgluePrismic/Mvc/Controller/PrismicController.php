@@ -240,8 +240,8 @@ class PrismicController extends AbstractActionController
 
         // Store the ref in the session
         $this->getSessionContainer()->ref = (string) $ref;
-        $this->getContext()->getPrismicApi()->getCache()->clear();
 
+        // Redirect to the determined url
         return $this->redirect()->toUrl($redirect);
     }
 
