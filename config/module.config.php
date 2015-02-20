@@ -158,6 +158,16 @@ return array(
                     ),
                 ),
             ),
+            'prismic-preview' => array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/preview-document',
+                    'defaults' => array(
+                        'controller' => 'NetgluePrismic\Mvc\Controller\PrismicController',
+                        'action' => 'preview',
+                    ),
+                ),
+            ),
             // Recieve notifications from Prismic.io when the content is updated etc.
             'prismic-webhook' => array(
                 'type' => 'Literal',

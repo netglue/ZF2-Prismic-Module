@@ -103,6 +103,10 @@ class Module implements
             $services->get('NetgluePrismic\Mvc\Listener\ToolbarListener'),
             'injectToolbar'
         ));
+
+        // Listener that decides which ref to set in the global context
+        $listener = $services->get('NetgluePrismic\Mvc\Listener\SelectedRefListener');
+        $app->getEventManager()->attach($listener);
     }
 
     /**
@@ -162,6 +166,7 @@ class Module implements
                 'NetgluePrismic\Mvc\Listener\ViewHelperDocumentListener' => 'NetgluePrismic\Mvc\Service\ViewHelperDocumentListenerFactory',
                 // Listener to inject the toolbar
                 'NetgluePrismic\Mvc\Listener\ToolbarListener' => 'NetgluePrismic\Mvc\Service\ToolbarListenerFactory',
+                'NetgluePrismic\Mvc\Listener\SelectedRefListener' => 'NetgluePrismic\Mvc\Service\SelectedRefListenerFactory',
             ),
             'invokables' => array(
                 'NetgluePrismic\Mvc\Listener\CacheBusterListener' => 'NetgluePrismic\Mvc\Listener\CacheBusterListener',
@@ -257,7 +262,7 @@ class Module implements
                         }
                     }
                     $element->setValueOptions($options);
-                    $element->setValue( (string) $context->getRef());
+                    $element->setValue($context->getRefAsString());
 
                     return $element;
                 }

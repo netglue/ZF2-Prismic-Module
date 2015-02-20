@@ -18,6 +18,12 @@ class Context implements ApiAwareInterface
     protected $ref;
 
     /**
+     * Current Ref as a string
+     * @var string|null
+     */
+    protected $refString;
+
+    /**
      * Whether the current request indicates there is privileged access
      * @var bool
      */
@@ -31,6 +37,20 @@ class Context implements ApiAwareInterface
     public function setRef(Ref $ref)
     {
         $this->ref = $ref;
+        $this->refString = $ref->getRef();
+    }
+
+    /**
+     * Set the current ref as a string (For example when in a preview session)
+     * @param string $ref
+     * @return void
+     */
+    public function setRefWithString($ref)
+    {
+        if(null !== $ref) {
+            $ref = (string) $ref;
+        }
+        $this->refString = $ref;
     }
 
     /**
@@ -45,6 +65,22 @@ class Context implements ApiAwareInterface
 
         return $this->ref;
     }
+
+    /**
+     * Return the current ref as a string
+     *
+     * If a string ref has been set, this will be returned in favour of a valid API ref so that we can preview releases
+     * @return string
+     */
+    public function getRefAsString()
+    {
+        if(!empty($this->refString)) {
+            return $this->refString;
+        }
+
+        return (string) $this->getRef();
+    }
+
 
     /**
      * Return the master Ref
@@ -73,25 +109,25 @@ class Context implements ApiAwareInterface
      */
     public function __toString()
     {
-        return (string) $this->getRef();
+        return $this->getRefAsString();
     }
 
     /**
      * Return a single document with the given id at the current repo ref
      * @param  string        $id
-     * @return Document|NULL
+     * @return Document|null
      */
     public function getDocumentById($id)
     {
         $query = sprintf('[[:d = at(document.id, "%s")]]', $id);
         $api = $this->getPrismicApi();
-        $documents = $api->forms()->everything->query($query)->ref((string) $this->getRef())->submit();
+        $documents = $api->forms()->everything->query($query)->ref($this->getRefAsString())->submit();
         if (count($documents->getResults())) {
             // There should be only one!
             return current($documents->getResults());
         }
 
-        return NULL;
+        return null;
     }
 
     /**
