@@ -32,13 +32,17 @@ class HeadMetaListener implements ListenerAggregateInterface
     protected $options = array(
         'enabled' => false,
         'propertyMap' => array(
-            'title' => 'meta_title',
-            'description' => 'meta_description',
-            'keywords'  => 'meta_keywords',
-            'robots'  => 'meta_robots',
-            'ogImage' => 'og_image',
-            'ogTitle' => 'meta_title',
-            'ogDescription' => 'meta_description',
+            'title'              => 'meta_title',
+            'description'        => 'meta_description',
+            'keywords'           => 'meta_keywords',
+            'robots'             => 'meta_robots',
+            'ogImage'            => 'og_image',
+            'ogTitle'            => 'meta_title',
+            'ogDescription'      => 'meta_description',
+            'twitterCard'        => 'twitter_card',
+            'twitterTitle'       => 'meta_title',
+            'twitterDescription' => 'meta_description',
+            'twitterImage'       => 'twitter_image',
         ),
     );
 
@@ -129,6 +133,10 @@ class HeadMetaListener implements ListenerAggregateInterface
         $this->setMetaDescription();
         $this->setMetaKeywords();
         $this->setMetaRobots();
+        $this->setTwitterCard();
+        $this->setTwitterTitle();
+        $this->setTwitterDescription();
+        $this->setTwitterImage();
         if ($this->doctype()->isRdfa()) {
             $this->setOgTitle();
             $this->setOgDescription();
@@ -309,5 +317,58 @@ class HeadMetaListener implements ListenerAggregateInterface
 
         return $this;
     }
+
+    /**
+     * Set the Twitter Card Type using the HeadMeta plugin if non-empty
+     * @return self
+     */
+    protected function setTwitterCard()
+    {
+        $value = $this->getTextValue('twitterCard');
+        if (!empty($value)) {
+            $this->headMeta()->setName('twitter:card', $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the Twitter Title using the HeadMeta plugin if non-empty
+     * @return self
+     */
+    protected function setTwitterTitle()
+    {
+        $value = $this->getTextValue('twitterTitle');
+        if (!empty($value)) {
+            $this->headMeta()->setName('twitter:title', $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the Twitter Description using the HeadMeta plugin if non-empty
+     * @return self
+     */
+    protected function setTwitterDescription()
+    {
+        $value = $this->getTextValue('twitterDescription');
+        if (!empty($value)) {
+            $this->headMeta()->setName('twitter:description', $value);
+        }
+
+        return $this;
+    }
+
+    protected function setTwitterImage()
+    {
+        $value = $this->getImageUrl('twitterImage');
+        if (!empty($value)) {
+            $this->headMeta()->setName('twitter:image', $value);
+        }
+
+        return $this;
+    }
+
 
 }
