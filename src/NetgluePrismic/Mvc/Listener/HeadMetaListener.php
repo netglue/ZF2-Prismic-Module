@@ -34,6 +34,8 @@ class HeadMetaListener implements ListenerAggregateInterface
         'propertyMap' => array(
             'title' => 'meta_title',
             'description' => 'meta_description',
+            'keywords'  => 'meta_keywords',
+            'robots'  => 'meta_robots',
             'ogImage' => 'og_image',
             'ogTitle' => 'meta_title',
             'ogDescription' => 'meta_description',
@@ -125,6 +127,8 @@ class HeadMetaListener implements ListenerAggregateInterface
         $this->document = $event->getParam('document');
         $this->setMetaTitle();
         $this->setMetaDescription();
+        $this->setMetaKeywords();
+        $this->setMetaRobots();
         if ($this->doctype()->isRdfa()) {
             $this->setOgTitle();
             $this->setOgDescription();
@@ -238,6 +242,35 @@ class HeadMetaListener implements ListenerAggregateInterface
 
         return $this;
     }
+
+    /**
+     * Set the Meta Keywords using the HeadMeta plugin if non-empty
+     * @return self
+     */
+    protected function setMetaKeywords()
+    {
+        $value = $this->getTextValue('keywords');
+        if (!empty($value)) {
+            $this->headMeta()->setName('keywords', $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the Meta Robots using the HeadMeta plugin if non-empty
+     * @return self
+     */
+    protected function setMetaRobots()
+    {
+        $value = $this->getTextValue('robots');
+        if (!empty($value)) {
+            $this->headMeta()->setName('robots', $value);
+        }
+
+        return $this;
+    }
+
 
     /**
      * Set the Open Graph Title using the HeadMeta plugin if non-empty

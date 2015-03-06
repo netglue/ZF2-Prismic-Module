@@ -107,7 +107,17 @@ class HeadMetaListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpCon
 
         foreach ($meta->getContainer()->getArrayCopy() as $item) {
             if ($item->type === 'name') {
-                $this->assertSame('Meta Description', $item->content);
+                switch($item->name) {
+                    case "description":
+                        $this->assertSame('Meta Description', $item->content);
+                        break;
+                    case "keywords":
+                        $this->assertSame('Meta Keywords', $item->content);
+                        break;
+                    case "robotos":
+                        $this->assertSame('Meta Robots', $item->content);
+                        break;
+                }
             }
             if ($item->type === 'property') {
                 switch ($item->property) {

@@ -20,6 +20,14 @@
                 "type": "Text",
                 "value": "Meta Description"
             },
+            "meta_keywords": {
+                "type": "Text",
+                "value": "Meta Keywords"
+            },
+            "meta_robots": {
+                "type": "Text",
+                "value": "Meta Robots"
+            },
             "og_image": {
                 "type": "Image",
                 "value": {

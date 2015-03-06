@@ -73,10 +73,12 @@ return array(
         'HeadMetaListener' => array(
             'enabled' => false,
             'propertyMap' => array(
-                'title' => 'meta_title',
-                'description' => 'meta_description',
-                'ogImage' => 'og_image',
-                'ogTitle' => 'meta_title',
+                'title'         => 'meta_title',
+                'description'   => 'meta_description',
+                'keywords'      => 'meta_keywords',
+                'robots'        => 'meta_robots',
+                'ogImage'       => 'og_image',
+                'ogTitle'       => 'meta_title',
                 'ogDescription' => 'meta_description',
             ),
         ),
