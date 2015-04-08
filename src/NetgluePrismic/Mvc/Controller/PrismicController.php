@@ -9,6 +9,7 @@ use Zend\Http\Client as HttpClient;
 use Zend\Http\Header\SetCookie;
 use Zend\Http\Response as HttpResponse;
 use Zend\Mvc\Application;
+use Prismic\Api;
 
 class PrismicController extends AbstractActionController
 {
@@ -153,7 +154,7 @@ class PrismicController extends AbstractActionController
         $url = $api->previewSession($token, $this->prismic()->getLinkResolver(), '/');
 
         $expires = time() + (29 * 60);
-        $cookie = new SetCookie(\Prismic\PREVIEW_COOKIE, $token, $expires);
+        $cookie = new SetCookie(Api::PREVIEW_COOKIE, $token, $expires);
         $headers = $this->getResponse()->getHeaders();
         $headers->addHeader($cookie);
 

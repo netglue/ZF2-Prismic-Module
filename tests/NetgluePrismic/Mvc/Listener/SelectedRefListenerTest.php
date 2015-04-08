@@ -57,7 +57,7 @@ class SelectedRefListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttp
      */
     public function testGetCookieRef(SelectedRefListener $listener)
     {
-        $name = str_replace('.', '_', \Prismic\PREVIEW_COOKIE);
+        $name = str_replace('.', '_', \Prismic\Api::PREVIEW_COOKIE);
         $_COOKIE[$name] = 'cookie';
         $this->getRequest()->setCookies($_COOKIE);
         $app = $this->getApplication();
@@ -87,7 +87,7 @@ class SelectedRefListenerTest extends \Zend\Test\PHPUnit\Controller\AbstractHttp
 
 
 
-        $name = str_replace('.', '_', \Prismic\PREVIEW_COOKIE);
+        $name = str_replace('.', '_', \Prismic\Api::PREVIEW_COOKIE);
         $_COOKIE[$name] = 'cookie';
         $this->getRequest()->setCookies($_COOKIE);
 
