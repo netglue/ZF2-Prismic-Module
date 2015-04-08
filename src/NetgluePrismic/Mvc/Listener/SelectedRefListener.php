@@ -10,6 +10,7 @@ use Zend\Mvc\MvcEvent;
 use NetgluePrismic\ContextAwareTrait;
 use NetgluePrismic\ContextAwareInterface;
 use NetgluePrismic\Session\PrismicContainer;
+use Prismic\Api;
 
 class SelectedRefListener implements
     ListenerAggregateInterface,
@@ -71,7 +72,7 @@ class SelectedRefListener implements
     {
         $request = $event->getApplication()->getRequest();
         $cookies = $request->getHeader('cookie');
-        $cookieName = \Prismic\PREVIEW_COOKIE;
+        $cookieName = Api::PREVIEW_COOKIE;
         $cookieName = str_replace('.', '_', $cookieName);
         if (isset($cookies->{$cookieName}) && !empty($cookies->{$cookieName})) {
 
