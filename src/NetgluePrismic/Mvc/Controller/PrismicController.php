@@ -319,6 +319,12 @@ class PrismicController extends AbstractActionController
 
         $json = $this->getRequest()->getContent();
 
+        if(empty($json)) {
+            return $this->getResponse()
+                ->setStatusCode(500)
+                ->setContent('Invalid JSON Data' . PHP_EOL);
+        }
+
         try {
             $params = \Zend\Json\Json::decode($json);
         } catch (\Zend\Json\Exception\ExceptionInterface $e) {
