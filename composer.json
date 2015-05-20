@@ -19,7 +19,7 @@
     "prefer-stable": true,
     "require" : {
         "php" : ">=5.4",
-        "zendframework/zendframework" : "2.3.*",
+        "zendframework/zendframework" : "~2.3",
         "prismic/php-sdk": ">=1.5.3",
         "egeloen/http-adapter": "~0.1"
     },
