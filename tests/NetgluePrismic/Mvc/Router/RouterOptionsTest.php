@@ -4,6 +4,14 @@ namespace NetgluePrismic\Mvc\Router;
 
 class RouterOptionsTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase
 {
+    public function setUp()
+    {
+        $this->setTraceError(false);
+        $this->setApplicationConfig(include __DIR__ . '/../../../TestConfig.php.dist');
+        parent::setUp();
+
+    }
+
     public function testBasic()
     {
         $options = new RouterOptions(array(
