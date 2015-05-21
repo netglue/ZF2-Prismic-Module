@@ -129,6 +129,7 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
 
         return array(
             $this->routerOptions->getIdParam() => $link->getId(),
+            $this->routerOptions->getUidParam() => $link->getUid(),
             $this->routerOptions->getMaskParam() => $document->getType(),
             $this->routerOptions->getBookmarkParam() => $bookmark,
             $this->routerOptions->getRefParam() => $this->getContext()->getRef(),

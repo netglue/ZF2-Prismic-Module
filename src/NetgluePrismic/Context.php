@@ -5,6 +5,7 @@ namespace NetgluePrismic;
 use Prismic\Api;
 use Prismic\Ref;
 use Prismic\Document;
+use Prismic\Predicates;
 
 class Context implements ApiAwareInterface
 {
@@ -120,6 +121,22 @@ class Context implements ApiAwareInterface
     public function getDocumentById($id)
     {
         $query = sprintf('[[:d = at(document.id, "%s")]]', $id);
+        $api = $this->getPrismicApi();
+        $documents = $api->forms()->everything->query($query)->ref($this->getRefAsString())->submit();
+        if (count($documents->getResults())) {
+            // There should be only one!
+            return current($documents->getResults());
+        }
+
+        return null;
+    }
+
+    public function getDocumentByUidAndMask($uid, $mask)
+    {
+        $query = [
+            Predicates::at("document.type", $mask),
+            Predicates::at("my.{$mask}.uid", $uid)
+        ];
         $api = $this->getPrismicApi();
         $documents = $api->forms()->everything->query($query)->ref($this->getRefAsString())->submit();
         if (count($documents->getResults())) {

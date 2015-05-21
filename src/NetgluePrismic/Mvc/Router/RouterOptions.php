@@ -10,6 +10,7 @@ class RouterOptions
     protected $ref;
     protected $id;
     protected $slug;
+    protected $uid;
 
     public function __construct(array $options)
     {
@@ -18,7 +19,8 @@ class RouterOptions
             'mask',
             'ref',
             'id',
-            'slug'
+            'slug',
+            'uid'
         );
         foreach ($valid as $name) {
             $this->{$name} = isset($options[$name]) ? (string) $options[$name] : $name;
@@ -53,6 +55,11 @@ class RouterOptions
     public function getSlugParam()
     {
         return $this->getParam('slug');
+    }
+
+    public function getUidParam()
+    {
+        return $this->getParam('uid');
     }
 
 }

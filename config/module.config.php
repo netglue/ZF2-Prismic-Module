@@ -60,6 +60,7 @@ return array(
             'ref'      => 'ref',
             'id'       => 'prismic-id',
             'slug'     => 'slug',
+            'uid'      => 'uid',
         ),
 
         /**

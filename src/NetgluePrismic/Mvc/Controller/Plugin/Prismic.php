@@ -206,12 +206,23 @@ class Prismic extends AbstractPlugin implements
         if (!$this->isMaskRequest()) {
             throw new Exception\RuntimeException('The request does not contain a mask parameter');
         }
-        $id = $this->getDocumentIdFromRoute();
-        if (empty($id)) {
-            throw new Exception\RuntimeException('The request does not contain the document id');
-        }
 
-        return $this->getDocumentById($id);
+        $mask = $this->getMaskFromRoute();
+        $id   = $this->getDocumentIdFromRoute();
+        $uid  = $this->getDocumentUidFromRoute();
+
+        if (empty($id) && empty($uid)) {
+            throw new Exception\RuntimeException('The request contains neither document id nor a document uid, therefore a single document cannot be located');
+        }
+        if(!empty($id)) {
+            return $this->getDocumentById($id);
+        }
+        return $this->getDocumentByUidAndMask($uid, $mask);
+    }
+
+    public function getDocumentByUidAndMask($uid, $mask)
+    {
+        return $this->getContext()->getDocumentByUidAndMask($uid, $mask);
     }
 
     /**
@@ -246,6 +257,18 @@ class Prismic extends AbstractPlugin implements
     {
         $params = $this->getController()->plugin('params');
         $search = $this->routerOptions->getIdParam();
+
+        return $params->fromRoute($search);
+    }
+
+    /**
+     * Return the document UID from the current matched route
+     * @return string|NULL
+     */
+    public function getDocumentUidFromRoute()
+    {
+        $params = $this->getController()->plugin('params');
+        $search = $this->routerOptions->getUidParam();
 
         return $params->fromRoute($search);
     }
