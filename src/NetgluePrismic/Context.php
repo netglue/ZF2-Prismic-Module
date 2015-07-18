@@ -43,15 +43,19 @@ class Context implements ApiAwareInterface
 
     /**
      * Set the current ref as a string (For example when in a preview session)
-     * @param string $ref
+     * @param string $refString
      * @return void
      */
-    public function setRefWithString($ref)
+    public function setRefWithString($refString)
     {
-        if(null !== $ref) {
-            $ref = (string) $ref;
+        if(null !== $refString) {
+            $refString = (string) $refString;
         }
-        $this->refString = $ref;
+        $this->refString = $refString;
+        $ref = $this->getRefWithString($refString);
+        if($ref) {
+            $this->setRef($ref);
+        }
     }
 
     /**
@@ -61,7 +65,7 @@ class Context implements ApiAwareInterface
     public function getRef()
     {
         if (!$this->ref) {
-            $this->setRef($this->getMasterRef());
+            return $this->getMasterRef();
         }
 
         return $this->ref;
