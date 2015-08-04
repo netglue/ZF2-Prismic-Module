@@ -29,7 +29,10 @@
     "autoload" : {
         "psr-0" : {
             "NetgluePrismic" : [ "src/", "tests/" ]
-        }
+        },
+		"classmap": [
+			"src/"
+		]
     },
     "repositories": [
     ]
