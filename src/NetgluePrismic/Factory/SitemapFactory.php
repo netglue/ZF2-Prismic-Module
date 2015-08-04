@@ -28,6 +28,9 @@ class SitemapFactory implements FactoryInterface
         if(isset($config['cache'])) {
             $sitemap->setCache($serviceLocator->get($config['cache']));
         }
+        if(isset($config['cache_prefix'])) {
+            $sitemap->setCachePrefix($config['cache_prefix']);
+        }
 
         /**
          * API and Context

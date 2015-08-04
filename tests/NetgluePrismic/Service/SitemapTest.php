@@ -111,6 +111,33 @@ class SitemapTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testInstance
      */
+    public function testGetSetCachePrefix(Sitemap $service)
+    {
+        $this->assertNull($service->getCachePrefix(), 'Cache prefix should be initially null');
+        $service->setCachePrefix('test');
+        $this->assertSame('test', $service->getCachePrefix(), 'Cache prefix should be set with a string');
+        $service->setCachePrefix('');
+        $this->assertNull($service->getCachePrefix(), 'Empty value should nullify cache prefix');
+
+        return $service;
+    }
+
+    /**
+     * @depends testGetSetCachePrefix
+     */
+    public function testGetCacheKeyForContainerNameIncludesPrefix(Sitemap $service)
+    {
+        $this->assertNull($service->getCachePrefix());
+        $this->assertSame('NetgluePrismicSitemapContainer-test', $service->getCacheKeyForContainerName('test'));
+        $service->setCachePrefix('test');
+        $this->assertSame('test-NetgluePrismicSitemapContainer-test', $service->getCacheKeyForContainerName('test'));
+        $service->setCachePrefix('');
+        $this->assertNull($service->getCachePrefix());
+    }
+
+    /**
+     * @depends testInstance
+     */
     public function testContainersAreCached(Sitemap $service)
     {
         $service->setCache($this->cache);

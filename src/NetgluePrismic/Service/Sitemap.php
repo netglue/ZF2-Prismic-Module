@@ -25,6 +25,12 @@ class Sitemap implements ContextAwareInterface,
     private $cache;
 
     /**
+     * Cache Key Prefix
+     * @var string|null
+     */
+    private $cachePrefix;
+
+    /**
      * Sitemap Configuration passed to individual generators
      */
     private $config;
@@ -96,6 +102,26 @@ class Sitemap implements ContextAwareInterface,
     }
 
     /**
+     * Set a cache key prefix
+     * @param string $prefix
+     * @return void
+     */
+    public function setCachePrefix($prefix)
+    {
+        $prefix = empty($prefix) ? null : (string) $prefix;
+        $this->cachePrefix = $prefix;
+    }
+
+    /**
+     * Get the cache prefix string
+     * @return string|null
+     */
+    public function getCachePrefix()
+    {
+        return $this->cachePrefix;
+    }
+
+    /**
      * Return an array of sitemap names so they can be used to construct an index
      * @return array
      */
@@ -144,7 +170,8 @@ class Sitemap implements ContextAwareInterface,
      */
     public function getCacheKeyForContainerName($name)
     {
-        return sprintf('NetgluePrismicSitemapContainer-%s', $name);
+        $prefix = (null == $this->cachePrefix) ? '' : $this->cachePrefix.'-';
+        return sprintf('%sNetgluePrismicSitemapContainer-%s', $prefix, $name);
     }
 
     /**
