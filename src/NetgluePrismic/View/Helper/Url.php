@@ -77,8 +77,11 @@ class Url extends AbstractHelper
         if (!$this->target instanceof LinkInterface) {
             return '';
         }
-
-        return (string) $this->getLinkResolver()->resolve($this->target);
+        try {
+            return (string) $this->getLinkResolver()->resolve($this->target);
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
 }
