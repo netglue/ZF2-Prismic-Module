@@ -58,6 +58,15 @@ class SitemapGenerator implements ContextAwareInterface,
     );
 
     /**
+     * An array of strings with keys as fragment names
+     * with which to exclude pages that match
+     * @var array
+     */
+    protected $exclude = array(
+
+    );
+
+    /**
      * Set the array that maps sitemap properties to Prismic document fragments
      * @param  array $map
      * @return void
@@ -73,6 +82,30 @@ class SitemapGenerator implements ContextAwareInterface,
             }
         }
         $this->propertyMap = $map;
+    }
+
+    /**
+     * Set fragment value exclusions with an array
+     * @param array $exclude
+     * @return void
+     */
+    public function setExclusions(array $exclude)
+    {
+        $this->exclude = array();
+        foreach($exclude as $fragment => $value) {
+            $this->addExclusion($fragment, $value);
+        }
+    }
+
+    /**
+     * Add an exclusion
+     * @param string $fragmentName
+     * @param string $value Value to match
+     * @return void
+     */
+    public function addExclusion($fragmentName, $value)
+    {
+        $this->exclude[$fragmentName] = $value;
     }
 
     /**
@@ -138,6 +171,36 @@ class SitemapGenerator implements ContextAwareInterface,
         return $form->submit();
     }
 
+    private function filterExcludedDocuments(array $docs)
+    {
+        if(!count($this->exclude)) {
+            return $docs;
+        }
+
+        foreach($this->exclude as $fragName => $value) {
+            $expectType = null;
+            $frag = $fragName;
+            if(strpos($fragName, '.') !== false) {
+                list($expectType, $frag) = explode('.', $fragName);
+            }
+            foreach($docs as $key => $doc) {
+                $type = $doc->getType();
+                if($expectType && $expectType !== $type) {
+                    continue;
+                }
+                $compare = null;
+                if($doc->get($type . '.' . $frag)) {
+                    $compare = $doc->get($type . '.' . $frag)->asText();
+                    if($compare === $value) {
+                        unset($docs[$key]);
+                    }
+                }
+            }
+        }
+
+        return $docs;
+    }
+
     /**
      * Return *all* documents of the configured types
      * @return array An array of Document instances
@@ -152,7 +215,7 @@ class SitemapGenerator implements ContextAwareInterface,
             $documents = array_merge($documents, $response->getResults());
         }
 
-        return $documents;
+        return $this->filterExcludedDocuments($documents);
     }
 
     /**

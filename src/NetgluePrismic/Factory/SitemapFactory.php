@@ -32,6 +32,10 @@ class SitemapFactory implements FactoryInterface
             $sitemap->setCachePrefix($config['cache_prefix']);
         }
 
+        if(isset($config['exclude'])) {
+            $sitemap->setExclusions($config['exclude']);
+        }
+
         /**
          * API and Context
          */

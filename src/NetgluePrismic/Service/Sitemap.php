@@ -52,6 +52,12 @@ class Sitemap implements ContextAwareInterface,
     protected $linkGenerator;
 
     /**
+     * Exclusions to pass to the generators
+     * @var array
+     */
+    private $exclude = array();
+
+    /**
      * @param  LinkResolver $resolver
      * @return void
      */
@@ -119,6 +125,11 @@ class Sitemap implements ContextAwareInterface,
     public function getCachePrefix()
     {
         return $this->cachePrefix;
+    }
+
+    public function setExclusions(array $exclude)
+    {
+        $this->exclude = $exclude;
     }
 
     /**
@@ -243,6 +254,7 @@ class Sitemap implements ContextAwareInterface,
         $generator->setLinkResolver($this->linkResolver);
         $generator->setLinkGenerator($this->linkGenerator);
         $generator->setPropertyMap($propertyMap);
+        $generator->setExclusions($this->exclude);
 
         return $generator;
     }
