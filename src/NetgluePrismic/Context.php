@@ -31,6 +31,24 @@ class Context implements ApiAwareInterface
     protected $privileged = false;
 
     /**
+     * Array cache of documents by ID
+     * @var array
+     */
+    protected $byId = array();
+
+    /**
+     * Array cache of documents by bookmark
+     * @var array
+     */
+    protected $byBookmark = array();
+
+    /**
+     * Array cache of documents by UID and Mask
+     * @var array
+     */
+    protected $byUidAndMask = array();
+
+    /**
      * Set the Prismic Ref
      * @param  Ref  $ref
      * @return void
@@ -124,12 +142,16 @@ class Context implements ApiAwareInterface
      */
     public function getDocumentById($id)
     {
+        if (isset($this->byId[$id])) {
+            return $this->byId[$id];
+        }
         $query = sprintf('[[:d = at(document.id, "%s")]]', $id);
         $api = $this->getPrismicApi();
         $documents = $api->forms()->everything->query($query)->ref($this->getRefAsString())->submit();
         if (count($documents->getResults())) {
             // There should be only one!
-            return current($documents->getResults());
+            $this->byId[$id] = current($documents->getResults());
+            return $this->byId[$id];
         }
 
         return null;
@@ -137,6 +159,12 @@ class Context implements ApiAwareInterface
 
     public function getDocumentByUidAndMask($uid, $mask)
     {
+        if (!isset($this->byUidAndMask[$mask])) {
+            $this->byUidAndMask[$mask] = array();
+        }
+        if (isset($this->byUidAndMask[$mask][$uid])) {
+            return $this->byUidAndMask[$mask][$uid];
+        }
         $query = [
             Predicates::at("document.type", $mask),
             Predicates::at("my.{$mask}.uid", $uid)
@@ -145,7 +173,8 @@ class Context implements ApiAwareInterface
         $documents = $api->forms()->everything->query($query)->ref($this->getRefAsString())->submit();
         if (count($documents->getResults())) {
             // There should be only one!
-            return current($documents->getResults());
+            $this->byUidAndMask[$mask][$uid] = current($documents->getResults());
+            return $this->byUidAndMask[$mask][$uid];
         }
 
         return null;
@@ -159,6 +188,9 @@ class Context implements ApiAwareInterface
      */
     public function getDocumentByBookmark($bookmark)
     {
+        if (isset($this->byBookmark[$bookmark])) {
+            return $this->byBookmark[$bookmark];
+        }
         /**
          * Either a string id or NULL
          */
@@ -171,7 +203,9 @@ class Context implements ApiAwareInterface
             ));
         }
 
-        return $this->getDocumentById($documentId);
+        $this->byBookmark[$bookmark] = $this->getDocumentById($documentId);
+
+        return $this->byBookmark[$bookmark];
     }
 
     /**
