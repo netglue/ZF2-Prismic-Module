@@ -150,6 +150,7 @@ class PrismicController extends AbstractActionController
         }
 
         $api = $this->prismic()->api();
+        $token = urldecode($token);
 
         $url = $api->previewSession($token, $this->prismic()->getLinkResolver(), '/');
 
