@@ -15,6 +15,7 @@ use Prismic\Predicates;
 use Prismic\Response;
 
 use Zend\Navigation\Navigation as Container;
+use Zend\Mvc\Router\Exception\ExceptionInterface as RoutingException;
 
 class SitemapGenerator implements ContextAwareInterface,
                                ApiAwareInterface
@@ -232,7 +233,12 @@ class SitemapGenerator implements ContextAwareInterface,
          * If we can't work out the href from the link resolver, we're screwed
          */
         $link = $this->linkGenerator->generate($document);
-        $url  = $this->linkResolver->resolve($link);
+        $url = null;
+        try {
+            $url  = $this->linkResolver->resolve($link);
+        } catch(RoutingException $e) {
+            // Likely, this URL needs additional parameters to be assembled
+        }
         if (!$url) {
             return null;
         }
