@@ -149,18 +149,26 @@ class PrismicController extends AbstractActionController
             return;
         }
 
-        $api = $this->prismic()->api();
-        $token = urldecode($token);
+        /**
+         * If you don't set the context ref now,
+         * the link resolver will be unable to resolve unpublished URLs
+         */
+        $this->getContext()->setRefWithString($token);
 
-        $url = $api->previewSession($token, $this->prismic()->getLinkResolver(), '/');
-
+        /**
+         * If you don't set the cookie, the Prismic Preview Icon will not show up
+         * at the bottom of the page
+         */
         $expires = time() + (29 * 60);
         $cookie = new SetCookie(Api::PREVIEW_COOKIE, $token, $expires);
         $headers = $this->getResponse()->getHeaders();
         $headers->addHeader($cookie);
 
-        //$this->getSessionContainer()->ref = (string) $token;
-
+        /**
+         * Figure out URL and redirect
+         */
+        $api = $this->prismic()->api();
+        $url = $api->previewSession($token, $this->prismic()->getLinkResolver(), '/');
         return $this->redirect()->toUrl($url);
     }
 

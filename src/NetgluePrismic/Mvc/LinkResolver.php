@@ -88,7 +88,6 @@ class LinkResolver extends PrismicResolver implements ContextAwareInterface
             // Can we route based on the mask type
             if ($this->hasRouteForMask($link->getType())) {
                 $routeName = $this->getRouteNameFromMask($link->getType());
-
                 return $this->getRouter()->assemble($this->getRouteParams($link), array(
                     'name' => $routeName,
                 ));

@@ -46,6 +46,17 @@ class SelectedRefListener implements
 
         if(null !== $cookie) {
             $ref = $cookie;
+        } else {
+            /**
+             * Check that $ref does not belong to a stale preview cookie
+             * i.e. it exists amongst all available refs. If it is stale, unset it
+             */
+            $api = $this->getContext()->getPrismicApi();
+            foreach($api->refs() as $cmp) {
+                if( (string) $cmp === $ref) {
+                    $ref = null;
+                }
+            }
         }
 
         if(null !== $ref) {
