@@ -142,6 +142,12 @@ class PrismicController extends AbstractActionController
     public function previewAction()
     {
         $token = $this->params()->fromQuery('token');
+
+        /**
+         * URL Decode the token
+         * Yes, this does need to be done…
+         */
+        $token = urldecode($token);
         if (empty($token)) {
             $this->getResponse()->setReasonPhrase('Bad Request');
             $this->raise404();
