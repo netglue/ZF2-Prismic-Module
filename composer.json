@@ -21,8 +21,7 @@
         "php" : ">=5.4",
         "zendframework/zendframework" : "~2.3",
         "zendframework/zend-mvc" : "<=2.6.3",
-        "prismic/php-sdk": ">=1.5.3",
-        "egeloen/http-adapter": "~0.1"
+        "prismic/php-sdk": ">=1.5.3"
     },
     "require-dev" : {
         "codeclimate/php-test-reporter": "dev-master"
