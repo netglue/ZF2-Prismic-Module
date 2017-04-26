@@ -69,15 +69,7 @@ class LinkGenerator implements ContextAwareInterface
      */
     public function getDocumentLink(Document $doc)
     {
-        return new DocumentLink(
-            $doc->getId(),
-            $doc->getUid(),
-            $doc->getType(),
-            $doc->getTags(),
-            $doc->getSlug(),
-            array(),
-            false
-        );
+        return $doc->asDocumentLink();
     }
 
 

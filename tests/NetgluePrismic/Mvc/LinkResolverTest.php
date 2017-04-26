@@ -56,7 +56,7 @@ class LinkResolverTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControl
         $tags = $doc->getTags();
         $slug = $doc->getSlug();
         $isBroken = false;
-        $link = new DocumentLink($id, null, $type, $tags, $slug, array(), $isBroken);
+        $link = $doc->asDocumentLink();
 
         $url = $this->resolver->resolve($link);
         $this->assertEquals($expect, $url);
@@ -74,7 +74,7 @@ class LinkResolverTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControl
         $tags = $doc->getTags();
         $slug = $doc->getSlug();
         $isBroken = false;
-        $link = new DocumentLink($id, null, $type, $tags, $slug, array(), $isBroken);
+        $link = $doc->asDocumentLink();
 
         $url = $this->resolver->resolve($link);
         $this->assertEquals($expect, $url);
@@ -98,15 +98,20 @@ class LinkResolverTest extends \Zend\Test\PHPUnit\Controller\AbstractHttpControl
 
     public function testResolveReturnsNullForBrokenDocumentLinks()
     {
-        $link = new DocumentLink('abcd', null, 'some-type', array('tag1'), 'snails', array(), true);
-        $result = $this->resolver->resolve($link);
+        $link = $this->prophesize(DocumentLink::class);
+        $link->isBroken()->willReturn(true);
+        $result = $this->resolver->resolve($link->reveal());
         $this->assertNull($result);
     }
 
     public function testResolveReturnsNullForUnroutableDocumentLinks()
     {
-        $link = new DocumentLink('abcd', null, 'some-type', array('tag1'), 'snails', array(), false);
-        $result = $this->resolver->resolve($link);
+        $link = $this->prophesize(DocumentLink::class);
+        $link->isBroken()->willReturn(false);
+        $link->getType()->willReturn('some-type');
+        $link->getId()->willReturn('abcd');
+
+        $result = $this->resolver->resolve($link->reveal());
         $this->assertNull($result);
     }
 }
