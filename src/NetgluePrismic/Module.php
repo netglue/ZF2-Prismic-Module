@@ -170,6 +170,8 @@ class Module implements
                 // Listener to inject the toolbar
                 'NetgluePrismic\Mvc\Listener\ToolbarListener' => 'NetgluePrismic\Mvc\Service\ToolbarListenerFactory',
                 'NetgluePrismic\Mvc\Listener\SelectedRefListener' => 'NetgluePrismic\Mvc\Service\SelectedRefListenerFactory',
+
+                Cache::class => Factory\PrismicCacheFactory::class,
             ),
             'invokables' => array(
                 'NetgluePrismic\Mvc\Listener\CacheBusterListener' => 'NetgluePrismic\Mvc\Listener\CacheBusterListener',

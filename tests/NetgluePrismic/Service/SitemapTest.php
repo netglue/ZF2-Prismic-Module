@@ -134,23 +134,4 @@ class SitemapTest extends \PHPUnit_Framework_TestCase
         $service->setCachePrefix('');
         $this->assertNull($service->getCachePrefix());
     }
-
-    /**
-     * @depends testInstance
-     */
-    public function testContainersAreCached(Sitemap $service)
-    {
-        $service->setCache($this->cache);
-        $service->resetContainers();
-        $key = $service->getCacheKeyForContainerName('test');
-        $this->assertFalse($this->cache->hasItem($key));
-        $container = $service->getContainerByName('test');
-        $this->assertTrue($this->cache->hasItem($key));
-
-        $service->resetContainers();
-        $cached = $this->cache->getItem($key);
-        $container = $service->getContainerByName('test');
-        $this->assertSame($container->toArray(), $cached->toArray());
-
-    }
 }

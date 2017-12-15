@@ -5,6 +5,7 @@ namespace NetgluePrismic\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use NetgluePrismic\Service\Sitemap;
+use NetgluePrismic\Cache;
 
 class SitemapFactory implements FactoryInterface
 {
@@ -20,14 +21,13 @@ class SitemapFactory implements FactoryInterface
         $config = $serviceLocator->get('Config');
         $config = isset($config['prismic']['sitemaps']) ? $config['prismic']['sitemaps'] : array();
 
-        $sitemap = new Sitemap;
+        $sitemap = new Sitemap(
+            $serviceLocator->get(Cache::class)
+        );
 
         /**
          * Cache
          */
-        if(isset($config['cache'])) {
-            $sitemap->setCache($serviceLocator->get($config['cache']));
-        }
         if(isset($config['cache_prefix'])) {
             $sitemap->setCachePrefix($config['cache_prefix']);
         }

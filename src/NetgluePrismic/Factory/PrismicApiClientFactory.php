@@ -7,8 +7,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Prismic\Api;
 use NetgluePrismic\Session\PrismicContainer;
 use GuzzleHttp\Exception\ClientException;
-use Prismic\Cache\CacheInterface;
-use NetgluePrismic\Cache\Facade;
+use NetgluePrismic\Cache;
 
 class PrismicApiClientFactory implements FactoryInterface
 {
@@ -42,18 +41,8 @@ class PrismicApiClientFactory implements FactoryInterface
             $token = $session->getAccessToken();
         }
 
-        /**
-         * See if a cache service name has been provided and wrap it in the facade
-         * if required
-         */
-        if(!empty($config['cache'])) {
-            $storage = $serviceLocator->get($config['cache']);
-            if( ! $storage instanceof CacheInterface) {
-                $cache = new Facade($storage);
-            } else {
-                $cache = $storage;
-            }
-        }
+        // This alias will give us a \Prismic\Cache\CacheInterface
+        $cache = $serviceLocator->get(Cache::class);
 
         if(!empty($config['httpClient'])) {
             $httpClient = $serviceLocator->get($config['httpClient']);

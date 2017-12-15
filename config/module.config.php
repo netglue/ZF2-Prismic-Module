@@ -102,12 +102,10 @@ return array(
          * It's expected that you'd change this to the usual /sitemap.xml but it's set this way
          * so as to not conflict with any existing data.
          *
-         * Caching is a really good idea. Provide the service name of the cache you want to use
          */
 
         /*
         'sitemaps' => array(
-            'cache' => null,
             'sitemaps' => array(
                 array(
                     'name' => 'blog-posts',

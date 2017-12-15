@@ -12,6 +12,8 @@ use NetgluePrismic\Exception;
 use Zend\Navigation\Navigation as Container;
 use Zend\Cache\Storage\StorageInterface as Cache;
 
+use Prismic\Cache\CacheInterface;
+
 class Sitemap implements ContextAwareInterface,
                                ApiAwareInterface
 {
@@ -20,7 +22,7 @@ class Sitemap implements ContextAwareInterface,
         ApiAwareTrait;
 
     /**
-     * Cache for storing the containers
+     * @var CacheInterface
      */
     private $cache;
 
@@ -56,6 +58,11 @@ class Sitemap implements ContextAwareInterface,
      * @var array
      */
     private $exclude = array();
+
+    public function __construct(CacheInterface $cache)
+    {
+        $this->cache = $cache;
+    }
 
     /**
      * @param  LinkResolver $resolver
@@ -97,15 +104,6 @@ class Sitemap implements ContextAwareInterface,
         $this->config = $config;
     }
 
-    /**
-     * Set a storage interface to cache containers with
-     * @param  Cache $cache
-     * @return void
-     */
-    public function setCache(Cache $cache = null)
-    {
-        $this->cache = $cache;
-    }
 
     /**
      * Set a cache key prefix
@@ -199,12 +197,10 @@ class Sitemap implements ContextAwareInterface,
             return $this->containers[$name];
         }
         $cacheKey = $this->getCacheKeyForContainerName($name);
-        if ($this->cache && $this->cache->hasItem($cacheKey)) {
-            $success = false;
-            $container = $this->cache->getItem($cacheKey, $success);
-            if (true === $success) {
+        if ($this->cache->has($cacheKey)) {
+            $container = $this->cache->get($cacheKey);
+            if ($container instanceof Container) {
                 $this->containers[$name] = $container;
-
                 return $container;
             }
         }
@@ -229,10 +225,7 @@ class Sitemap implements ContextAwareInterface,
         $container = $generator->getContainer();
         if ($container instanceof Container) {
             $this->containers[$name] = $container;
-            if ($this->cache) {
-                $this->cache->setItem($cacheKey, $container);
-            }
-
+            $this->cache->set($cacheKey, $container);
             return $container;
         }
 
