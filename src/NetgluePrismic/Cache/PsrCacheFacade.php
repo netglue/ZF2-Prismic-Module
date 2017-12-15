@@ -6,7 +6,7 @@ use Prismic\Cache\CacheInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Cache\CacheException;
 
-class PrismicPsrCacheFacade implements CacheInterface
+class PsrCacheFacade implements CacheInterface
 {
 
     /**
